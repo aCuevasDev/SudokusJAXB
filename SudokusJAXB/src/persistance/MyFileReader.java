@@ -15,7 +15,7 @@ public class MyFileReader implements IFileReader {
 			bufferedReader = new BufferedReader(fileReader);
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				String sudokus[] = line.split("%");
+				// TODO LEER CHAR 0 EN LINEA Y MIRAR SI ES %
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
