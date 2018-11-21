@@ -1,4 +1,4 @@
-package persistance;
+package com.acuevas.sudokus.persistance;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,8 +14,19 @@ public class MyFileReader implements IFileReader {
 			fileReader = new FileReader(file);
 			bufferedReader = new BufferedReader(fileReader);
 			String line;
+			Integer level;
+			String description;
+			String uncompletedSudoku;
+			String completedSudoku;
+
 			while ((line = bufferedReader.readLine()) != null) {
-				// TODO LEER CHAR 0 EN LINEA Y MIRAR SI ES %
+				if (line.substring(0).equals("%")) {
+					line.trim();
+					level = Integer.parseInt(line.substring(2));
+					description = line.substring(3, line.length());
+					uncompletedSudoku = bufferedReader.readLine();
+					completedSudoku = bufferedReader.readLine();
+				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

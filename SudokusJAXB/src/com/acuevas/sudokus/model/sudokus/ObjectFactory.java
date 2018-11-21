@@ -6,7 +6,7 @@
 //
 
 
-package model.sudokus;
+package com.acuevas.sudokus.model.sudokus;
 
 import javax.xml.bind.annotation.XmlRegistry;
 

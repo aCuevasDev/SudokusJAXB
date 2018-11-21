@@ -6,7 +6,7 @@
 //
 
 
-package model.sudokus;
+package com.acuevas.sudokus.model.sudokus;
 
 import java.util.ArrayList;
 import java.util.List;

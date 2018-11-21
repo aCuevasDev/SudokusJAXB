@@ -1,4 +1,4 @@
-package persistance;
+package com.acuevas.sudokus.persistance;
 
 import java.io.File;
 
