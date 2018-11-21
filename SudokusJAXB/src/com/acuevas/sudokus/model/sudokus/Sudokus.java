@@ -127,10 +127,22 @@ public class Sudokus {
 		@XmlAttribute(name = "description")
 		protected String description;
 
+		/**
+		 * Default constructor needed by the JAXB tech to instanciate an object from a
+		 * XML file.
+		 */
 		public Sudoku() {
 			// TODO Auto-generated constructor stub
 		}
 
+		/**
+		 * Builds a Sudoku instance with all his fields.
+		 * 
+		 * @param level             Integer, the difficulty level.
+		 * @param description       String with the description of the difficulty.
+		 * @param uncompletedSudoku String with the sudoku uncompleted.
+		 * @param completedSudoku   String with the completed sudoku.
+		 */
 		public Sudoku(Integer level, String description, String uncompletedSudoku, String completedSudoku) {
 			this.level = level;
 			this.description = description;
