@@ -3,8 +3,14 @@ package com.acuevas.sudokus.persistance;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.acuevas.sudokus.model.sudokus.Sudokus;
 
 public class MyFileReader implements IFileReader {
+
+	private Set<Sudokus.Sudoku> sudokus = new HashSet<>();
 
 	@Override
 	public void readFile(File file) {
@@ -20,14 +26,19 @@ public class MyFileReader implements IFileReader {
 			String completedSudoku;
 
 			while ((line = bufferedReader.readLine()) != null) {
-				if (line.substring(0).equals("%")) {
-					line.trim();
-					level = Integer.parseInt(line.substring(2));
-					description = line.substring(3, line.length());
+				if (line.substring(0, 1).equals("%")) {
+					line = line.replace(" ", "");
+//					line = line.trim(); 
+//					TODO TRIM NOT WORKING?
+					level = Integer.parseInt(line.substring(1, 2));
+					description = line.substring(2, line.length());
 					uncompletedSudoku = bufferedReader.readLine();
 					completedSudoku = bufferedReader.readLine();
+					Sudokus.Sudoku sudoku = new Sudokus.Sudoku(level, description, uncompletedSudoku, completedSudoku);
+					sudokus.add(sudoku);
 				}
 			}
+			sudokus.forEach(System.out::println);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
