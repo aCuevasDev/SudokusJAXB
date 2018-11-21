@@ -17,33 +17,42 @@ public class Manager {
 	private static Sudokus sudokus;
 
 	public static void main(String[] args) {
-
-		MyFileReader reader = new MyFileReader();
-		sudokus = reader.readSudokusFile(TXTSUDOKUS);
+		if (!XMLSUDOKUS.exists()) {
+			MyFileReader reader = new MyFileReader();
+			sudokus = reader.readSudokusFile(TXTSUDOKUS);
+			writeIntoXML(sudokus, XMLSUDOKUS);
+		}
 
 	}
 
 	private static void writeIntoXML(Object JAXBElement, File file) {
 		Marshaller marshaller;
-		if ((marshaller = getMarshallerFromObj(sudokus)) != null) {
-			try {
-				marshaller.marshal(sudokus, XMLSUDOKUS);
-			} catch (JAXBException e) {
-				System.err.println(e.getMessage());
+		try {
+			if ((marshaller = getMarshallerFromObj(JAXBElement)) != null) {
+				try {
+					marshaller.marshal(JAXBElement, file);
+				} catch (JAXBException e) {
+					System.err.println(e.getMessage());
+				}
 			}
+		} catch (MyException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private static <T> Object readFromXML(Object JAXBElement, File file) {
 		Unmarshaller unmarshaller;
-		if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
-			try {
-				return (T) unmarshaller.unmarshal(file);
-			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
+				try {
+					return (T) unmarshaller.unmarshal(file);
+				} catch (JAXBException e) {
+					e.printStackTrace();
+				}
+		} catch (MyException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -51,25 +60,25 @@ public class Manager {
 		try {
 			return getMarshaller(getContext(object));
 		} catch (JAXBException e) {
-			throw new MyException("Error getting the marshaller");
-			// TODO NOT HARDCODED MESSAGE
-
+			throw new MyException(MyException.MARSHALLERERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
+																// EXCEPTION
 		}
 	}
 
-	private static Unmarshaller getUnmarshallerFromObj(Object object) {
+	private static Unmarshaller getUnmarshallerFromObj(Object object) throws MyException {
 		try {
 			return getUnmarshaller(getContext(object));
 		} catch (JAXBException e) {
-			e.printStackTrace();
-			System.out.println("Something went wrong.");
-			System.out.println(e.getMessage());
+			throw new MyException(MyException.UNMARSHALLERERROR);
 		}
-		return null;
 	}
 
-	private static JAXBContext getContext(Object object) throws JAXBException {
-		return JAXBContext.newInstance(object.getClass());
+	private static JAXBContext getContext(Object object) throws MyException {
+		try {
+			return JAXBContext.newInstance(object.getClass());
+		} catch (JAXBException e) {
+			throw new MyException(MyException.GETTINGCONTEXTERROR);
+		}
 	}
 
 	private static Unmarshaller getUnmarshaller(JAXBContext context) throws JAXBException {
