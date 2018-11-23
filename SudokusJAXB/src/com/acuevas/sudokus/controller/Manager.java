@@ -14,7 +14,7 @@ import com.acuevas.sudokus.persistance.MyFileReader;
 public class Manager {
 	private static final File XMLSUDOKUS = new File("sudokus.xml");
 	private static final File TXTSUDOKUS = new File("sudokus.txt");
-	private static Sudokus sudokus;
+	private static Sudokus sudokus = new Sudokus();
 
 	public static void main(String[] args) {
 		if (!XMLSUDOKUS.exists()) {
@@ -22,6 +22,8 @@ public class Manager {
 			sudokus = reader.readSudokusFile(TXTSUDOKUS);
 			writeIntoXML(sudokus, XMLSUDOKUS);
 		}
+		readFromXML(sudokus, XMLSUDOKUS);
+		System.out.println("Done");
 
 	}
 
