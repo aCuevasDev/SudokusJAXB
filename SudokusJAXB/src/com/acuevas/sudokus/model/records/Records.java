@@ -1,14 +1,9 @@
-//
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.22 a las 03:14:38 PM CET 
-//
 
 package com.acuevas.sudokus.model.records;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -37,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *                   &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="uncompletedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="completedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *                   &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *                 &lt;/sequence>
  *                 &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>
@@ -104,6 +100,7 @@ public class Records {
 	 *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *         &lt;element name="uncompletedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *         &lt;element name="completedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
 	 *       &lt;/sequence>
 	 *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
 	 *     &lt;/restriction>
@@ -114,7 +111,7 @@ public class Records {
 	 * 
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "", propOrder = { "username", "uncompletedSudoku", "completedSudoku" })
+	@XmlType(name = "", propOrder = { "username", "uncompletedSudoku", "completedSudoku", "time" })
 	public static class Record {
 
 		@XmlElement(required = true)
@@ -123,6 +120,7 @@ public class Records {
 		protected String uncompletedSudoku;
 		@XmlElement(required = true)
 		protected String completedSudoku;
+		protected int time;
 		@XmlAttribute(name = "code")
 		protected String code;
 
@@ -184,6 +182,22 @@ public class Records {
 		 */
 		public void setCompletedSudoku(String value) {
 			this.completedSudoku = value;
+		}
+
+		/**
+		 * Obtiene el valor de la propiedad time.
+		 * 
+		 */
+		public int getTime() {
+			return time;
+		}
+
+		/**
+		 * Define el valor de la propiedad time.
+		 * 
+		 */
+		public void setTime(int value) {
+			this.time = value;
 		}
 
 		/**
