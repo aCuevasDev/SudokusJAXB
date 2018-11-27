@@ -101,7 +101,7 @@ public class MyPersistanceManager {
 		try {
 			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
 				try {
-					return (T) unmarshaller.unmarshal(file);
+					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
 				} catch (JAXBException e) {
 					e.printStackTrace();
 				}
