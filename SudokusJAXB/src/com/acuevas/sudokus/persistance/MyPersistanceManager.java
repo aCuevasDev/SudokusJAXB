@@ -10,8 +10,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import com.acuevas.sudokus.exceptions.Errors;
 import com.acuevas.sudokus.exceptions.MyException;
+import com.acuevas.sudokus.exceptions.MyException.StructErrors;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
 
 public class MyPersistanceManager {
@@ -51,20 +51,22 @@ public class MyPersistanceManager {
 						completedSudoku = bufferedReader.readLine();
 						if (uncompletedSudoku.length() != 80 + 1 | completedSudoku.length() != 80 + 1) {
 							// 80+1 because length starts counting on 1 instead of 0.
-							throw new MyException(Errors.SUDOKUESNOTCORRECT);
+							throw new MyException(StructErrors.SUDOKUES_NOT_CORRECT);
 						}
 					} catch (MyException ex) {
 						throw ex;
 					} catch (Exception e) {
 						// catch with generic Exception because no matter why if something goes wrong
 						// here we cannot continue and the struct is bad.
-						throw new MyException(Errors.PERSISTANCESTRUCTURE);
+						throw new MyException(StructErrors.PERSISTANCE_STRUCTURE);
 					}
 					Sudokus.Sudoku sudoku = new Sudokus.Sudoku(level, description, uncompletedSudoku, completedSudoku);
 					sudokus.getSudokus().add(sudoku);
 				}
 			}
 		} catch (IOException e) {
+			// TODO CHANGE THIS INTO A VIEW CLASS, IF I CHANGE THE CONSOLE TO A GUI IT MUST
+			// STILL WORK CHANGING ONLY VIEW CLASS
 			System.err.println(e.getMessage());
 		} catch (MyException e) {
 			System.err.println(e.getMessage());
@@ -94,7 +96,7 @@ public class MyPersistanceManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> Object readFromXML(Object JAXBElement, File file) {
+	public <T> T readFromXML(Object JAXBElement, File file) {
 		Unmarshaller unmarshaller;
 		try {
 			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
@@ -113,8 +115,8 @@ public class MyPersistanceManager {
 		try {
 			return getMarshaller(getContext(object));
 		} catch (JAXBException e) {
-			throw new MyException(Errors.MARSHALLERERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
-															// EXCEPTION
+			throw new MyException(StructErrors.MARSHALLER_ERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
+			// EXCEPTION
 		}
 	}
 
@@ -122,7 +124,7 @@ public class MyPersistanceManager {
 		try {
 			return getUnmarshaller(getContext(object));
 		} catch (JAXBException e) {
-			throw new MyException(Errors.UNMARSHALLERERROR);
+			throw new MyException(StructErrors.UNMARSHALLER_ERROR);
 		}
 	}
 
@@ -130,7 +132,7 @@ public class MyPersistanceManager {
 		try {
 			return JAXBContext.newInstance(object.getClass());
 		} catch (JAXBException e) {
-			throw new MyException(Errors.GETTINGCONTEXTERROR);
+			throw new MyException(StructErrors.GETTING_CONTEXT_ERROR);
 		}
 	}
 

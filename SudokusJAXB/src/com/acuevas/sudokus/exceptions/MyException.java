@@ -3,46 +3,33 @@ package com.acuevas.sudokus.exceptions;
 @SuppressWarnings("serial")
 public class MyException extends Exception {
 
-	/*
-	 * public static final int PERSISTANCESTRUCTURECODE = 200; public static final
-	 * int SUDOKUSNOTCORRECT = 202; public static final int MARSHALLERERROR = 205;
-	 * public static final int UNMARSHALLERERROR = 201; public static final int
-	 * GETTINGCONTEXTERROR = 203; private final int ERRORNOTSUPPORTED = -43254;
-	 */
+	private StructErrors error;
 
-	private String errorMessage;
+	public enum StructErrors {
 
-	public MyException(Errors Error) {
-		super();
+		// @formatter:off
+		PERSISTANCE_STRUCTURE("The structure of the .txt file is not supported."),
+		SUDOKUES_NOT_CORRECT("The sudokus inserted are not correct."),
+		MARSHALLER_ERROR("Error getting the Marshaller."),
+		UNMARSHALLER_ERROR("Error getting the UnMarshaller."),
+		GETTING_CONTEXT_ERROR("Error getting the context."),
+		ERROR_NOT_SUPPORTED("Error not implemented.");
+		// @formatter:on
 
-		switch (Error) {
-		case PERSISTANCESTRUCTURE:
-			errorMessage = "The structure of the .txt file is not supported.";
-			break;
-		case SUDOKUESNOTCORRECT:
-			errorMessage = "The sudokus inserted are not correct.";
-			break;
-		case ERRORNOTSUPPORTED:
-			errorMessage = "Error not implemented.";
-			break;
-		case GETTINGCONTEXTERROR:
-			errorMessage = "Error getting the context.";
-			break;
-		case MARSHALLERERROR:
-			errorMessage = "Error getting the Marshaller";
-			break;
-		case UNMARSHALLERERROR:
-			errorMessage = "Error getting the UnMarshaller";
-			break;
-		default:
-			// if the errorCode of the exception is wrong/not implemented.
-			errorMessage = "Error not implemented.";
+		private String message;
+
+		private StructErrors(String message) {
+			this.message = message;
 		}
+	};
+
+	public MyException(StructErrors error) {
+		this.error = error;
 	}
 
 	@Override
 	public String getMessage() {
-		return errorMessage;
+		return error.message;
 	}
 
 }

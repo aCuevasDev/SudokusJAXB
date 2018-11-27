@@ -120,6 +120,56 @@ public class Users {
 		@XmlAttribute(name = "code")
 		protected String code;
 
+		private long index;
+
+//TODO JAXB CREATES A USER() THEN CALLS THE SETTERS TO INSERT THE FIELDS. SECURE CODE PERSISTANCE
+		public User() {
+			code = User.class.getSimpleName().substring(0, 3) + index++;
+		}
+
+		public User(String name, String username, String password) {
+			this.name = name;
+			this.username = username;
+			this.password = password;
+		}
+
+		// TODO right now i use the username to identify
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((username == null) ? 0 : username.hashCode());
+			return result;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			User other = (User) obj;
+			if (username == null) {
+				if (other.username != null)
+					return false;
+			} else if (!username.equals(other.username))
+				return false;
+			return true;
+		}
+
 		/**
 		 * Obtiene el valor de la propiedad name.
 		 * 
@@ -196,10 +246,8 @@ public class Users {
 		 * @param value allowed object is {@link String }
 		 * 
 		 */
-		public void setCode(String value) {
+		private void setCode(String value) {
 			this.code = value;
 		}
-
 	}
-
 }

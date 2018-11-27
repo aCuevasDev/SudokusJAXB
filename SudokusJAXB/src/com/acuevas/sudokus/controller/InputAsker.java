@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
  */
 public abstract class InputAsker {
 
+	// TODO get the cadena String from view
+
 	public static String pedirCadena(String texto) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String cadena = "";
