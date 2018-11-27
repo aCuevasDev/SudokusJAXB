@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.acuevas.sudokus.exceptions.Errors;
 import com.acuevas.sudokus.exceptions.MyException;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
 import com.acuevas.sudokus.persistance.MyFileReader;
@@ -62,8 +63,8 @@ public class Manager {
 		try {
 			return getMarshaller(getContext(object));
 		} catch (JAXBException e) {
-			throw new MyException(MyException.MARSHALLERERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
-																// EXCEPTION
+			throw new MyException(Errors.MARSHALLERERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
+															// EXCEPTION
 		}
 	}
 
@@ -71,7 +72,7 @@ public class Manager {
 		try {
 			return getUnmarshaller(getContext(object));
 		} catch (JAXBException e) {
-			throw new MyException(MyException.UNMARSHALLERERROR);
+			throw new MyException(Errors.UNMARSHALLERERROR);
 		}
 	}
 
@@ -79,7 +80,7 @@ public class Manager {
 		try {
 			return JAXBContext.newInstance(object.getClass());
 		} catch (JAXBException e) {
-			throw new MyException(MyException.GETTINGCONTEXTERROR);
+			throw new MyException(Errors.GETTINGCONTEXTERROR);
 		}
 	}
 
