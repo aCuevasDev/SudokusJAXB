@@ -11,8 +11,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.acuevas.sudokus.model.Codeable;
-
 /**
  * <p>
  * Clase Java para anonymous complex type.
@@ -111,7 +109,7 @@ public class Users {
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "name", "username", "password" })
-	public static class User extends Codeable {
+	public static class User {
 
 		@XmlElement(required = true)
 		protected String name;
