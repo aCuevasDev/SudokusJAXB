@@ -14,18 +14,18 @@ import com.acuevas.sudokus.exceptions.MyException;
 import com.acuevas.sudokus.exceptions.MyException.StructErrors;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
 
-public class MyPersistanceManager {
+public class SudokusDAO {
 
-	private static MyPersistanceManager reader;
+	private static SudokusDAO reader;
 	private Sudokus sudokus = new Sudokus();
 
-	private MyPersistanceManager() {
+	private SudokusDAO() {
 
 	}
 
-	public static MyPersistanceManager getInstance() {
+	public static SudokusDAO getInstance() {
 		if (reader == null)
-			reader = new MyPersistanceManager();
+			reader = new SudokusDAO();
 		return reader;
 	}
 

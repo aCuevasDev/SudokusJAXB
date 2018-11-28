@@ -134,6 +134,33 @@ public class Records {
 		protected String completedSudoku;
 
 		/**
+		 * Empty Constructor
+		 */
+		public Record() {
+		}
+
+		/**
+		 * Constructor with all its fields.
+		 * 
+		 * @param username          String
+		 * @param time              int
+		 * @param level             int
+		 * @param description       String
+		 * @param uncompletedSudoku String
+		 * @param completedSudoku   String
+		 */
+		public Record(String username, int time, int level, String description, String uncompletedSudoku,
+				String completedSudoku) {
+			super();
+			this.username = username;
+			this.time = time;
+			this.level = level;
+			this.description = description;
+			this.uncompletedSudoku = uncompletedSudoku;
+			this.completedSudoku = completedSudoku;
+		}
+
+		/**
 		 * Obtiene el valor de la propiedad username.
 		 * 
 		 * @return possible object is {@link String }

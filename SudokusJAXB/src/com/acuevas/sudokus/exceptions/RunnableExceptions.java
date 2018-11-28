@@ -5,7 +5,7 @@ public class RunnableExceptions extends Exception {
 //TODO EXCEPTIONS THAT DOESN'T STOP THE PROGRAM
 
 	public enum RunErrors {
-		USER_NOT_FOUND_OR_INCORRECT_PASSWORD("");
+		USER_NOT_FOUND_OR_INCORRECT_PASSWORD(""), WRONG_TIME("");
 
 		private String message;
 

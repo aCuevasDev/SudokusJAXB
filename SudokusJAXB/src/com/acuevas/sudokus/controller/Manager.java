@@ -12,7 +12,9 @@ import com.acuevas.sudokus.model.sudokus.Sudokus;
 import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
-import com.acuevas.sudokus.persistance.MyPersistanceManager;
+import com.acuevas.sudokus.persistance.SudokusDAO;
+import com.acuevas.sudokus.views.View;
+import com.acuevas.sudokus.views.View.Messages;
 
 public class Manager {
 	private static final File XMLSUDOKUS = new File("sudokus.xml");
@@ -26,7 +28,7 @@ public class Manager {
 	private User loggedInUser;
 
 	public static void main(String[] args) {
-		MyPersistanceManager persistanceManager = MyPersistanceManager.getInstance();
+		SudokusDAO persistanceManager = SudokusDAO.getInstance();
 		if (!XMLSUDOKUS.exists()) {
 			sudokus = persistanceManager.readSudokusTXT(TXTSUDOKUS);
 			persistanceManager.writeIntoXML(sudokus, XMLSUDOKUS);
@@ -75,8 +77,12 @@ public class Manager {
 		boolean error = false;
 
 		do {
-			String username = InputAsker.pedirCadena("Insert your username.");
-			String password = InputAsker.pedirCadena("Insert your password.");
+			View.printMessage(Messages.ASK_USERNAME, true);
+			String username = InputAsker.pedirCadena("");
+
+			View.printMessage(Messages.ASK_PASSWORD, true);
+			String password = InputAsker.pedirCadena("");
+
 			User user1 = users.getUsers().stream().filter(user -> user.equals(username)).findFirst().orElse(null);
 			if (user1 != null)
 				if (user1.getPassword().equals(password))
@@ -88,21 +94,44 @@ public class Manager {
 				throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 		} while (error);
 	}
-
-	@Deprecated
+// @formatter:off
+	//TODO ERASE THIS
+/*	@Deprecated
 	private void insertRecordsIntoUser(Records records, User user) {
 		List<Record> recordsList = records.getRecords().stream()
 				.filter(record -> record.getUsername().equals(user.getUsername())).collect(Collectors.toList());
 		user.setRecords(recordsList);
-	}
+	} */
+	// @formatter:on
 
-	private List<Sudoku> giveSudoku() {
+	private List<Sudoku> giveSudoku(User user) {
 //		List<Sudoku> sudokus1 = loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())))).collect(Collectors.toList());
 		return sudokus.getSudokus().stream()
-				.filter(sudoku -> !sudoku.equals(records.getRecords().stream()
-						.map(record -> new Sudoku(record.getLevel(), record.getDescription(),
-								record.getUncompletedSudoku(), record.getCompletedSudoku()))))
+				.filter(sudoku -> !sudoku.equals(
+						records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
+								.map(record -> new Sudoku(record.getLevel(), record.getDescription(),
+										record.getUncompletedSudoku(), record.getCompletedSudoku()))))
 				.collect(Collectors.toList());
-		// TODO CREATE GETCODE ON SUDOKU REGEN
+	}
+
+	private void registerRecord(Sudoku sudoku) {
+		boolean error;
+		do {
+			try {
+				error = false;
+				int time = InputAsker.pedirEntero("");
+				if (!(time <= 0))
+					throw new RunnableExceptions(RunErrors.WRONG_TIME);
+			} catch (RunnableExceptions e) {
+				View.printError(e.getMessage());
+				error = true;
+			}
+		} while (error);
+		Record record;
+
+	}
+
+	private void reload(Class class1) {
+		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 }
