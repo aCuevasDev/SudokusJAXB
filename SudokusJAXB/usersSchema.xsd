@@ -13,7 +13,6 @@
 			  <xsd:element name="username" type="xsd:string"/>
 			  <xsd:element name="password" type="xsd:string"/>
 			</xsd:sequence>
-			<xsd:attribute name="code" type="xsd:string"/>
 		</xsd:complexType>
 	</xsd:element>
 	</xsd:choice>

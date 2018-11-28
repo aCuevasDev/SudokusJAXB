@@ -1,3 +1,9 @@
+//
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Generado el: 2018.11.28 a las 05:50:18 PM CET 
+//
 
 package com.acuevas.sudokus.model.records;
 
@@ -6,7 +12,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -30,11 +35,12 @@ import javax.xml.bind.annotation.XmlType;
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
  *                   &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *                   &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *                   &lt;element name="level" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *                   &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="uncompletedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="completedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                   &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *                 &lt;/sequence>
- *                 &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
@@ -98,11 +104,12 @@ public class Records {
 	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
 	 *       &lt;sequence>
 	 *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
+	 *         &lt;element name="level" type="{http://www.w3.org/2001/XMLSchema}int"/>
+	 *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *         &lt;element name="uncompletedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *         &lt;element name="completedSudoku" type="{http://www.w3.org/2001/XMLSchema}string"/>
-	 *         &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}int"/>
 	 *       &lt;/sequence>
-	 *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
 	 *     &lt;/restriction>
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
@@ -111,18 +118,20 @@ public class Records {
 	 * 
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "", propOrder = { "username", "uncompletedSudoku", "completedSudoku", "time" })
+	@XmlType(name = "", propOrder = { "username", "time", "level", "description", "uncompletedSudoku",
+			"completedSudoku" })
 	public static class Record {
 
 		@XmlElement(required = true)
 		protected String username;
+		protected int time;
+		protected int level;
+		@XmlElement(required = true)
+		protected String description;
 		@XmlElement(required = true)
 		protected String uncompletedSudoku;
 		@XmlElement(required = true)
 		protected String completedSudoku;
-		protected int time;
-		@XmlAttribute(name = "code")
-		protected String code;
 
 		/**
 		 * Obtiene el valor de la propiedad username.
@@ -142,6 +151,58 @@ public class Records {
 		 */
 		public void setUsername(String value) {
 			this.username = value;
+		}
+
+		/**
+		 * Obtiene el valor de la propiedad time.
+		 * 
+		 */
+		public int getTime() {
+			return time;
+		}
+
+		/**
+		 * Define el valor de la propiedad time.
+		 * 
+		 */
+		public void setTime(int value) {
+			this.time = value;
+		}
+
+		/**
+		 * Obtiene el valor de la propiedad level.
+		 * 
+		 */
+		public int getLevel() {
+			return level;
+		}
+
+		/**
+		 * Define el valor de la propiedad level.
+		 * 
+		 */
+		public void setLevel(int value) {
+			this.level = value;
+		}
+
+		/**
+		 * Obtiene el valor de la propiedad description.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getDescription() {
+			return description;
+		}
+
+		/**
+		 * Define el valor de la propiedad description.
+		 * 
+		 * @param value allowed object is {@link String }
+		 * 
+		 */
+		public void setDescription(String value) {
+			this.description = value;
 		}
 
 		/**
@@ -182,42 +243,6 @@ public class Records {
 		 */
 		public void setCompletedSudoku(String value) {
 			this.completedSudoku = value;
-		}
-
-		/**
-		 * Obtiene el valor de la propiedad time.
-		 * 
-		 */
-		public int getTime() {
-			return time;
-		}
-
-		/**
-		 * Define el valor de la propiedad time.
-		 * 
-		 */
-		public void setTime(int value) {
-			this.time = value;
-		}
-
-		/**
-		 * Obtiene el valor de la propiedad code.
-		 * 
-		 * @return possible object is {@link String }
-		 * 
-		 */
-		public String getCode() {
-			return code;
-		}
-
-		/**
-		 * Define el valor de la propiedad code.
-		 * 
-		 * @param value allowed object is {@link String }
-		 * 
-		 */
-		public void setCode(String value) {
-			this.code = value;
 		}
 
 	}

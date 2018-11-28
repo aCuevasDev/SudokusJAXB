@@ -9,6 +9,7 @@ import com.acuevas.sudokus.exceptions.RunnableExceptions.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
+import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
 import com.acuevas.sudokus.persistance.MyPersistanceManager;
@@ -88,14 +89,20 @@ public class Manager {
 		} while (error);
 	}
 
+	@Deprecated
 	private void insertRecordsIntoUser(Records records, User user) {
 		List<Record> recordsList = records.getRecords().stream()
 				.filter(record -> record.getUsername().equals(user.getUsername())).collect(Collectors.toList());
 		user.setRecords(recordsList);
 	}
 
-	private void giveSudoku() {
-		loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())));
-		//TODO CREATE GETCODE ON SUDOKU REGEN 
+	private List<Sudoku> giveSudoku() {
+//		List<Sudoku> sudokus1 = loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())))).collect(Collectors.toList());
+		return sudokus.getSudokus().stream()
+				.filter(sudoku -> !sudoku.equals(records.getRecords().stream()
+						.map(record -> new Sudoku(record.getLevel(), record.getDescription(),
+								record.getUncompletedSudoku(), record.getCompletedSudoku()))))
+				.collect(Collectors.toList());
+		// TODO CREATE GETCODE ON SUDOKU REGEN
 	}
 }

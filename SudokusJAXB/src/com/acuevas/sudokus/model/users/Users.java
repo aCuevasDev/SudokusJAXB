@@ -1,3 +1,9 @@
+//
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Generado el: 2018.11.28 a las 05:50:36 PM CET 
+//
 
 package com.acuevas.sudokus.model.users;
 
@@ -6,12 +12,9 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import com.acuevas.sudokus.model.records.Records.Record;
 
 /**
  * <p>
@@ -35,7 +38,6 @@ import com.acuevas.sudokus.model.records.Records.Record;
  *                   &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                 &lt;/sequence>
- *                 &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
@@ -101,7 +103,6 @@ public class Users {
 	 *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
 	 *       &lt;/sequence>
-	 *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}string" />
 	 *     &lt;/restriction>
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
@@ -119,59 +120,14 @@ public class Users {
 		protected String username;
 		@XmlElement(required = true)
 		protected String password;
-		@XmlAttribute(name = "code")
-		protected String code;
 
-		private List<Record> records;
-
-		private long index;
-
-//TODO JAXB CREATES A USER() THEN CALLS THE SETTERS TO INSERT THE FIELDS. SECURE CODE PERSISTANCE
 		public User() {
-			code = User.class.getSimpleName().substring(0, 3) + index++;
 		}
 
 		public User(String name, String username, String password) {
 			this.name = name;
 			this.username = username;
 			this.password = password;
-		}
-
-		// TODO right now i use the username to identify
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((username == null) ? 0 : username.hashCode());
-			return result;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			User other = (User) obj;
-			if (username == null) {
-				if (other.username != null)
-					return false;
-			} else if (!username.equals(other.username))
-				return false;
-			return true;
 		}
 
 		/**
@@ -234,38 +190,6 @@ public class Users {
 			this.password = value;
 		}
 
-		/**
-		 * Obtiene el valor de la propiedad code.
-		 * 
-		 * @return possible object is {@link String }
-		 * 
-		 */
-		public String getCode() {
-			return code;
-		}
-
-		/**
-		 * Define el valor de la propiedad code.
-		 * 
-		 * @param value allowed object is {@link String }
-		 * 
-		 */
-		private void setCode(String value) {
-			this.code = value;
-		}
-
-		/**
-		 * @return the records of sudokus
-		 */
-		public List<Record> getRecords() {
-			return records;
-		}
-
-		/**
-		 * @param recordsList the records to set
-		 */
-		public void setRecords(List<Record> recordsList) {
-			this.records = recordsList;
-		}
 	}
+
 }

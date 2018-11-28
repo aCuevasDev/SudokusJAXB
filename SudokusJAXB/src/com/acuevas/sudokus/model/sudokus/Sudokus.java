@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.20 a las 08:16:36 PM CET 
+// Generado el: 2018.11.28 a las 05:50:00 PM CET 
 //
 
 package com.acuevas.sudokus.model.sudokus;
@@ -127,27 +127,15 @@ public class Sudokus {
 		@XmlAttribute(name = "description")
 		protected String description;
 
-		/**
-		 * Default constructor needed by the JAXB tech to instanciate an object from a
-		 * XML file.
-		 */
 		public Sudoku() {
-			// TODO Auto-generated constructor stub
 		}
 
-		/**
-		 * Builds a Sudoku instance with all his fields.
-		 * 
-		 * @param level             Integer, the difficulty level.
-		 * @param description       String with the description of the difficulty.
-		 * @param uncompletedSudoku String with the sudoku uncompleted.
-		 * @param completedSudoku   String with the completed sudoku.
-		 */
-		public Sudoku(Integer level, String description, String uncompletedSudoku, String completedSudoku) {
+		public Sudoku(Integer level, String description, String unCompletedSudoku, String solvedSudoku) {
+			super();
+			this.problem = unCompletedSudoku;
+			this.solved = solvedSudoku;
 			this.level = level;
 			this.description = description;
-			this.problem = uncompletedSudoku;
-			this.solved = completedSudoku;
 		}
 
 		/*
