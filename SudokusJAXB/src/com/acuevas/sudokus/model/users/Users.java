@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.acuevas.sudokus.model.records.Records.Record;
+
 /**
  * <p>
  * Clase Java para anonymous complex type.
@@ -119,6 +121,8 @@ public class Users {
 		protected String password;
 		@XmlAttribute(name = "code")
 		protected String code;
+
+		private List<Record> records;
 
 		private long index;
 
@@ -248,6 +252,20 @@ public class Users {
 		 */
 		private void setCode(String value) {
 			this.code = value;
+		}
+
+		/**
+		 * @return the records of sudokus
+		 */
+		public List<Record> getRecords() {
+			return records;
+		}
+
+		/**
+		 * @param recordsList the records to set
+		 */
+		public void setRecords(List<Record> recordsList) {
+			this.records = recordsList;
 		}
 	}
 }

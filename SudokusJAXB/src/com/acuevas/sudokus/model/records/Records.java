@@ -77,7 +77,7 @@ public class Records {
 	 * 
 	 * 
 	 */
-	public List<Records.Record> getRecord() {
+	public List<Records.Record> getRecords() {
 		if (record == null) {
 			record = new ArrayList<Records.Record>();
 		}

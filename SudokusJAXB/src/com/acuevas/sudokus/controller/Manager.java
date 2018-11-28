@@ -1,10 +1,13 @@
 package com.acuevas.sudokus.controller;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.acuevas.sudokus.exceptions.RunnableExceptions;
 import com.acuevas.sudokus.exceptions.RunnableExceptions.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
+import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
@@ -78,9 +81,21 @@ public class Manager {
 				if (user1.getPassword().equals(password))
 					return user1;
 				else
-					throw new RunnableExceptions(RunErrors.USERNOTFOUNDORINCORRECTPASSWORD);
+					throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
+			// TODO DOCUMENTATE WHY I USE THE SAME EXCEPTION ENUM (LESS HACKABLE)
 			else
-				throw new RunnableExceptions(RunErrors.USERNOTFOUNDORINCORRECTPASSWORD);
+				throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 		} while (error);
+	}
+
+	private void insertRecordsIntoUser(Records records, User user) {
+		List<Record> recordsList = records.getRecords().stream()
+				.filter(record -> record.getUsername().equals(user.getUsername())).collect(Collectors.toList());
+		user.setRecords(recordsList);
+	}
+
+	private void giveSudoku() {
+		loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())));
+		//TODO CREATE GETCODE ON SUDOKU REGEN 
 	}
 }
