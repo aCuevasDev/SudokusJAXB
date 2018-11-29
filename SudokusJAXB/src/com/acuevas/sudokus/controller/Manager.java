@@ -28,14 +28,14 @@ public class Manager {
 	private User loggedInUser;
 
 	public static void main(String[] args) {
-		SudokusDAO persistanceManager = SudokusDAO.getInstance();
+		SudokusDAO sudokusDAO = SudokusDAO.getInstance();
 		if (!XMLSUDOKUS.exists()) {
-			sudokus = persistanceManager.readSudokusTXT(TXTSUDOKUS);
-			persistanceManager.writeIntoXML(sudokus, XMLSUDOKUS);
+			sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
+			sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
 		}
-		sudokus = persistanceManager.readFromXML(sudokus, XMLSUDOKUS);
-		records = persistanceManager.readFromXML(records, XMLRECORDS);
-		users = persistanceManager.readFromXML(users, XMLUSERS);
+		sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
+		records = sudokusDAO.readFromXML(records, XMLRECORDS);
+		users = sudokusDAO.readFromXML(users, XMLUSERS);
 
 		System.out.println("Done");
 	}
@@ -51,29 +51,46 @@ public class Manager {
 		// reseted, but if the user fails at matching passwords the program doesn't ask
 		// for a username again.
 		do {
-			error = false;
-			if (username == null)
-				username = InputAsker.pedirCadena("Please, insert your desired username.");
-			if (!users.getUsers().contains(username)) {
-				name = InputAsker.pedirCadena("Now insert your name.");
-				pswrd = InputAsker.pedirCadena("Insert your password.");
-				pswrd2 = InputAsker.pedirCadena("Insert your password again.");
-				if (pswrd.equals(pswrd2)) {
-					User user = new User();
-				} else {
-					System.err.println("Passwords doesn't match.");
-					// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
-					error = true;
+			try {
+				error = false;
+				if (username == null) {
+					View.printMessage(Messages.ASK_USERNAME, true);
+					username = InputAsker.pedirCadena("");
 				}
-			} else {
-				System.out.println("user already in use.");
+				if (!users.getUsers().contains(username)) {
+					View.printMessage(Messages.ASK_NAME, true);
+					name = InputAsker.pedirCadena("");
+					do {
+						try {
+							error = false;
+							View.printMessage(Messages.ASK_PASSWORD, true);
+							pswrd = InputAsker.pedirCadena("");
+							View.printMessage(Messages.ASK_PASSWORD, false);
+							View.printMessage(Messages.AGAIN, true);
+							pswrd2 = InputAsker.pedirCadena("");
+							if (pswrd.equals(pswrd2)) {
+								User user = new User();
+							} else {
+								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
+								// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
+							}
+						} catch (RunnableExceptions e) {
+							View.printError(e.getMessage());
+							error = true;
+						}
+					} while (error);
+				} else {
+					throw new RunnableExceptions(RunErrors.USER_IN_USE);
+				}
+			} catch (RunnableExceptions e) {
+				View.printError(e.getMessage());
 				username = null;
 				error = true;
 			}
 		} while (error);
 	}
 
-	private User logIn() throws RunnableExceptions {
+	private void logIn() throws RunnableExceptions {
 		boolean error = false;
 
 		do {
@@ -86,7 +103,7 @@ public class Manager {
 			User user1 = users.getUsers().stream().filter(user -> user.equals(username)).findFirst().orElse(null);
 			if (user1 != null)
 				if (user1.getPassword().equals(password))
-					return user1;
+					loggedInUser = user1;
 				else
 					throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 			// TODO DOCUMENTATE WHY I USE THE SAME EXCEPTION ENUM (LESS HACKABLE)
@@ -131,7 +148,24 @@ public class Manager {
 
 	}
 
-	private void reload(Class class1) {
+	private void reload(Object object) {
+		// I'm not using switch because it only accepts constant keys.
+		// I don't like constants tbh.
+		try {
+			SudokusDAO reader = SudokusDAO.getInstance();
+			Class class1 = object.getClass();
+			if (class1.equals(sudokus.getClass())) {
+				sudokus = reader.readFromXML(sudokus, XMLSUDOKUS);
+			} else if (class1.equals(records.getClass())) {
+				records = reader.readFromXML(records, XMLRECORDS);
+			} else if (class1.equals(users.getClass())) {
+				users = reader.readFromXML(users, XMLUSERS);
+			} else {
+				throw new RunnableExceptions(RunErrors.NOT_SUPPORTED);
+			}
+		} catch (RunnableExceptions e) {
+			View.printError(e.getMessage());
+		}
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 }

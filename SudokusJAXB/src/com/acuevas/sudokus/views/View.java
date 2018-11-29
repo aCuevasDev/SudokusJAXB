@@ -3,8 +3,8 @@ package com.acuevas.sudokus.views;
 public class View {
 
 	public enum Messages {
-		ASK_TIME("How long did it take to complete the sudoku?."), ASK_USERNAME("Please, insert your username."),
-		ASK_PASSWORD("Please, insert your password.");
+		ASK_TIME("How long did it take to complete the sudoku?"), ASK_USERNAME("Please, insert your username"),
+		ASK_PASSWORD("Please, insert your password"), ASK_NAME("Please, insert your name"), AGAIN("again");
 
 		private String message;
 
@@ -26,9 +26,9 @@ public class View {
 	 */
 	public static void printMessage(Messages message, boolean nextLine) {
 		if (nextLine)
-			System.out.println(message);
+			System.out.println(message + ".");
 		else
-			System.out.print(message);
+			System.out.print(message + " ");
 	}
 
 }
