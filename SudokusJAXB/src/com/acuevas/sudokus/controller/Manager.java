@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.acuevas.sudokus.exceptions.MyException;
 import com.acuevas.sudokus.exceptions.RunnableExceptions;
 import com.acuevas.sudokus.exceptions.RunnableExceptions.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
@@ -33,10 +34,13 @@ public class Manager {
 			sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
 			sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
 		}
-		sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
-		records = sudokusDAO.readFromXML(records, XMLRECORDS);
-		users = sudokusDAO.readFromXML(users, XMLUSERS);
-
+		try {
+			sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
+			records = sudokusDAO.readFromXML(records, XMLRECORDS);
+			users = sudokusDAO.readFromXML(users, XMLUSERS);
+		} catch (MyException e) {
+			View.printError(e.getMessage());
+		}
 		System.out.println("Done");
 	}
 
@@ -70,6 +74,8 @@ public class Manager {
 							pswrd2 = InputAsker.pedirCadena("");
 							if (pswrd.equals(pswrd2)) {
 								User user = new User();
+								loggedInUser = user;
+								users.getUsers().add(user);
 							} else {
 								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
 								// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
@@ -148,7 +154,7 @@ public class Manager {
 
 	}
 
-	private void reload(Object object) {
+	private void reload(Object object) throws MyException {
 		// I'm not using switch because it only accepts constant keys.
 		// I don't like constants tbh.
 		try {

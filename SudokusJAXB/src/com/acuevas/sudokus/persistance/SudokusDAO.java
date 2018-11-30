@@ -30,6 +30,7 @@ public class SudokusDAO {
 	}
 
 	public Sudokus readSudokusTXT(File file) {
+		// TODO MAYBE ERASE THE REPLACE(" ")?
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		try {
@@ -96,9 +97,11 @@ public class SudokusDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T readFromXML(Object JAXBElement, File file) {
+	public <T> T readFromXML(Object JAXBElement, File file) throws MyException {
 		Unmarshaller unmarshaller;
 		try {
+			if (!file.exists())
+				throw new MyException(StructErrors.FILE_NOT_FOUND);
 			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
 				try {
 					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
@@ -107,8 +110,9 @@ public class SudokusDAO {
 				}
 		} catch (MyException e) {
 			e.printStackTrace();
+
 		}
-		return null;
+		throw new MyException(StructErrors.CRITICAL_FAILURE);
 	}
 
 	private Marshaller getMarshallerFromObj(Object object) throws MyException {
