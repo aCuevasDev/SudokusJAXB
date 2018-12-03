@@ -14,6 +14,7 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
 import com.acuevas.sudokus.persistance.SudokusDAO;
+import com.acuevas.sudokus.views.InputAsker;
 import com.acuevas.sudokus.views.View;
 import com.acuevas.sudokus.views.View.Messages;
 
@@ -73,12 +74,11 @@ public class Manager {
 							View.printMessage(Messages.AGAIN, true);
 							pswrd2 = InputAsker.pedirCadena("");
 							if (pswrd.equals(pswrd2)) {
-								User user = new User();
+								User user = new User(name, username, pswrd);
 								loggedInUser = user;
 								users.getUsers().add(user);
 							} else {
 								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
-								// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
 							}
 						} catch (RunnableExceptions e) {
 							View.printError(e.getMessage());
@@ -156,7 +156,7 @@ public class Manager {
 
 	private void reload(Object object) throws MyException {
 		// I'm not using switch because it only accepts constant keys.
-		// I don't like constants tbh.
+		// I don't like using constants if i can avoid it tbh.
 		try {
 			SudokusDAO reader = SudokusDAO.getInstance();
 			Class class1 = object.getClass();

@@ -119,8 +119,8 @@ public class SudokusDAO {
 					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
 				} catch (IOException ex) {
 					ex.printStackTrace();
-					throw new MyException(StructErrors.)
 					View.printError(ex.getMessage());
+					throw new MyException(StructErrors.CRITICAL_FAILURE);
 				} catch (JAXBException e) {
 					e.printStackTrace();
 				}

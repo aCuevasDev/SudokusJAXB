@@ -16,6 +16,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.acuevas.sudokus.exceptions.RunnableExceptions;
+import com.acuevas.sudokus.views.InputAsker;
+import com.acuevas.sudokus.views.View;
+
 /**
  * <p>
  * Clase Java para anonymous complex type.
@@ -128,6 +132,34 @@ public class Users {
 			this.name = name;
 			this.username = username;
 			this.password = password;
+		}
+
+		/**
+		 * Changes the password of this User, asks the password twice to check they're
+		 * correct.
+		 */
+		public void changePassword() {
+			boolean error;
+			do {
+				error = false;
+				String psword;
+				String psword2;
+				View.printMessage(View.Messages.ASK_PASSWORD, true);
+				psword = InputAsker.pedirCadena("");
+				if (psword.equals(password)) {
+					View.printMessage(View.Messages.NEW_PASWORD, true);
+					psword = InputAsker.pedirCadena("");
+					View.printMessage(View.Messages.NEW_PASWORD, false);
+					View.printMessage(View.Messages.AGAIN, true);
+					psword2 = InputAsker.pedirCadena("");
+					if (psword.equals(psword2)) {
+						password = psword;
+						View.printMessage(View.Messages.PSWRD_CHANGED, true);
+					} else
+						View.printError(RunnableExceptions.RunErrors.PASSWORDS_DONT_MATCH.toString());
+				} else
+					View.printError(View.Messages.INCORRECT_PASSWORD.toString());
+			} while (error);
 		}
 
 		/**
