@@ -70,6 +70,7 @@ public class Manager {
 							pswrd2 = InputAsker.pedirCadena("");
 							if (pswrd.equals(pswrd2)) {
 								User user = new User();
+								users.getUsers().add(user);
 							} else {
 								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
 								// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
