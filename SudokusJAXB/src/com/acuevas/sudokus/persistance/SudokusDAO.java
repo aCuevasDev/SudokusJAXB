@@ -13,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 import com.acuevas.sudokus.exceptions.MyException;
 import com.acuevas.sudokus.exceptions.MyException.StructErrors;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
+import com.acuevas.sudokus.views.View;
 
 public class SudokusDAO {
 
@@ -96,6 +97,13 @@ public class SudokusDAO {
 		}
 	}
 
+	/**
+	 * Reads an XML and transforms it into classes using JAXB tech.
+	 * 
+	 * @param JAXBElement An object of the class you want to insert the data into.
+	 * @param file        The file to read data from
+	 * @return T Instance of the Object<T> with all the data.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T readFromXML(Object JAXBElement, File file) throws MyException {
 		Unmarshaller unmarshaller;
@@ -104,7 +112,15 @@ public class SudokusDAO {
 				throw new MyException(StructErrors.FILE_NOT_FOUND);
 			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
 				try {
+					if (!file.exists()) // If the file didn't exist the program throwed a IOException and crashed but I
+										// couldn't put the IOException catch clause without throwing it manually, Don't
+										// know why.
+						throw new IOException(new Throwable("Input Output error"));
 					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					throw new MyException(StructErrors.)
+					View.printError(ex.getMessage());
 				} catch (JAXBException e) {
 					e.printStackTrace();
 				}
