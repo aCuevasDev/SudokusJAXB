@@ -6,7 +6,7 @@ public class View {
 		ASK_TIME("How long did it take to complete the sudoku?"), ASK_USERNAME("Please, insert your username"),
 		ASK_PASSWORD("Please, insert your password"), ASK_NAME("Please, insert your name"), AGAIN("again"),
 		NEW_PASWORD("Insert your new password."), PSWRD_CHANGED("Password changed succesfully."),
-		INCORRECT_PASSWORD("Incorrect password.");
+		INCORRECT_PASSWORD("Incorrect password."), FINISH_SUDOKU("Did you finish the sudoku?");
 
 		private String message;
 

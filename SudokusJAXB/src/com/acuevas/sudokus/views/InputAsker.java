@@ -80,6 +80,12 @@ public abstract class InputAsker {
 		}
 	}
 
+	/**
+	 * This method only allows the user to input yes or no
+	 * 
+	 * @param text
+	 * @return
+	 */
 	public static boolean yesOrNo(String text) {
 		boolean error = false;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

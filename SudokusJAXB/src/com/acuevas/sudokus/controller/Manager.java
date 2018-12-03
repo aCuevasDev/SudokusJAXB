@@ -30,19 +30,23 @@ public class Manager {
 	private User loggedInUser;
 
 	public static void main(String[] args) {
-		SudokusDAO sudokusDAO = SudokusDAO.getInstance();
-		if (!XMLSUDOKUS.exists()) {
-			sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
-			sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
-		}
 		try {
-			sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
-			records = sudokusDAO.readFromXML(records, XMLRECORDS);
-			users = sudokusDAO.readFromXML(users, XMLUSERS);
+			SudokusDAO sudokusDAO = SudokusDAO.getInstance();
+			if (!XMLSUDOKUS.exists()) {
+				sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
+				sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
+			}
+			try {
+				sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
+				records = sudokusDAO.readFromXML(records, XMLRECORDS);
+				users = sudokusDAO.readFromXML(users, XMLUSERS);
+			} catch (MyException e) {
+				throw e;
+			}
+			System.out.println("Done");
 		} catch (MyException e) {
-			View.printError(e.getMessage());
+			System.exit(0);
 		}
-		System.out.println("Done");
 	}
 
 	private void createNewUser() {
@@ -173,5 +177,10 @@ public class Manager {
 			View.printError(e.getMessage());
 		}
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
+	}
+
+	private void finishSudoku() {
+		InputAsker.yesOrNo(View.Messages.FINISH_SUDOKU.toString());
+
 	}
 }

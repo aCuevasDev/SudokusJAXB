@@ -13,7 +13,6 @@ import javax.xml.bind.Unmarshaller;
 import com.acuevas.sudokus.exceptions.MyException;
 import com.acuevas.sudokus.exceptions.MyException.StructErrors;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
-import com.acuevas.sudokus.views.View;
 
 public class SudokusDAO {
 
@@ -112,23 +111,24 @@ public class SudokusDAO {
 				throw new MyException(StructErrors.FILE_NOT_FOUND);
 			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
 				try {
-					if (!file.exists()) // If the file didn't exist the program throwed a IOException and crashed but I
-										// couldn't put the IOException catch clause without throwing it manually, Don't
-										// know why.
-						throw new IOException(new Throwable("Input Output error"));
+//					if (!file.exists()) // If the file didn't exist the program throwed a IOException and crashed but I
+					// couldn't put the IOException catch clause without throwing it manually, Don't
+					// know why.
+//						throw new IOException(new Throwable("Input Output error"));
 					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					View.printError(ex.getMessage());
-					throw new MyException(StructErrors.CRITICAL_FAILURE);
+//				}
+//					catch (IOException ex) {
+//					ex.printStackTrace();
+//					View.printError(ex.getMessage());
+//					throw new MyException(StructErrors.CRITICAL_FAILURE);
 				} catch (JAXBException e) {
 					e.printStackTrace();
 				}
 		} catch (MyException e) {
 			e.printStackTrace();
-
+			throw new MyException(StructErrors.CRITICAL_FAILURE);
 		}
-		throw new MyException(StructErrors.CRITICAL_FAILURE);
+		// TODO FIX THIS SO THE STACKTRACE EXCEPTION WORKS PROPERLY
 	}
 
 	private Marshaller getMarshallerFromObj(Object object) throws MyException {
