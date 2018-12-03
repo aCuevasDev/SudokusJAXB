@@ -25,6 +25,7 @@ public class MyException extends Exception {
 
 	public MyException(StructErrors error) {
 		this.error = error;
+		printStackTrace();
 	}
 
 	@Override
