@@ -147,10 +147,11 @@ public class Manager {
 			try {
 				error = false;
 				int time = InputAsker.pedirEntero("");
-				if (!(time <= 0))
+				if (time <= 0)
 					throw new RunnableExceptions(RunErrors.WRONG_TIME);
 			} catch (RunnableExceptions e) {
-				View.printError(e.getMessage());
+				e.printStackTrace();
+//				View.printError(e.getMessage());
 				error = true;
 			}
 		} while (error);
@@ -180,7 +181,7 @@ public class Manager {
 	}
 
 	private void finishSudoku() {
-		InputAsker.yesOrNo(View.Messages.FINISH_SUDOKU.toString());
+		boolean finished = InputAsker.yesOrNo(View.Messages.FINISH_SUDOKU.toString());
 
 	}
 }

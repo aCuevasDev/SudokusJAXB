@@ -130,7 +130,6 @@ public class SudokusDAO {
 				return (T) unmarshaller.unmarshal(file);
 			}
 		} catch (MyException | JAXBException e) {
-			e.printStackTrace();
 			throw new MyException(StructErrors.CRITICAL_FAILURE);
 		}
 		return null;
