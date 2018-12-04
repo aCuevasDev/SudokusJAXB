@@ -213,21 +213,18 @@ public class Manager {
 		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
 		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
 	}
-	
-	public Double getMeanTime(User user){
-mean = records.stream()
-.filter(record -> record.username.equals(user.username))
-.MapToDouble(Record::getTime)
-.average()
-.orElse(mean=Double.NaN);
-return media.isNaN() ? null : mean;
-}
+
+	public Double getMeanTime(User user) {
+		Double mean = records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
+				.mapToDouble(Record::getTime).average().orElse(mean = Double.NaN);
+		return mean.isNaN() ? null : mean;
+	}
 
 public void getRankings{
 List<Ranking> rankings = users.stream()
 .Map(Ranking::new)
 .collect(Collectors.toList());
 
-Rankings.sort();
-Rankings.forEach(UserInteraction::print);
+rankings.sort();
+rankings.forEach(UserInteraction::print);
 }

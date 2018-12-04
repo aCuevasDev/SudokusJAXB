@@ -12,12 +12,28 @@ import javax.xml.bind.Unmarshaller;
 
 import com.acuevas.sudokus.exceptions.CriticalException;
 import com.acuevas.sudokus.exceptions.CriticalException.StructErrors;
+import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
+import com.acuevas.sudokus.model.users.Users;
 
+/**
+ * 
+ * @author Alex
+ *
+ */
 public class SudokusDAO {
+	// All the data is managed in the DAO.
 
-	private static SudokusDAO reader;
-	private Sudokus sudokus = new Sudokus();
+	private static final File XMLSUDOKUS = new File("sudokus.xml");
+	private static final File TXTSUDOKUS = new File("sudokus.txt");
+	private static final File XMLRECORDS = new File("records.xml");
+	private static final File XMLUSERS = new File("users.xml");
+
+	private static Sudokus sudokus = new Sudokus();
+	private static Users users = new Users();
+	private static Records records = new Records();
+
+	private static SudokusDAO sudokusDAO;
 
 	private SudokusDAO() {
 
@@ -29,9 +45,9 @@ public class SudokusDAO {
 	 * @return SudokusDAO
 	 */
 	public static SudokusDAO getInstance() {
-		if (reader == null)
-			reader = new SudokusDAO();
-		return reader;
+		if (sudokusDAO == null)
+			sudokusDAO = new SudokusDAO();
+		return sudokusDAO;
 	}
 
 	/**
@@ -48,7 +64,7 @@ public class SudokusDAO {
 	 * @see CriticalException
 	 */
 	public Sudokus readSudokusTXT(File file) throws CriticalException {
-		// TODO MAYBE ERASE THE REPLACE(" ")?
+		Sudokus sudokus = new Sudokus();
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		try {
@@ -62,7 +78,7 @@ public class SudokusDAO {
 
 			while ((line = bufferedReader.readLine()) != null) {
 				if (line.substring(0, 1).equals("%")) {
-					line = line.replace(" ", "");
+					line = line.replace(" ", ""); // to remove different spacings between sudokus
 					try {
 						level = Integer.parseInt(line.substring(1, 2));
 						description = line.substring(2, line.length());
@@ -99,12 +115,20 @@ public class SudokusDAO {
 		return sudokus;
 	}
 
-	public void writeIntoXML(Object JAXBElement, File file) throws CriticalException {
+	/**
+	 * Writes the JAXBElement object into and XML file using JAXB tech. (marshaller)
+	 * 
+	 * @param jaxbElement an instance of an object compatible with JAXB tech.
+	 * @param file        the File where you want to save data into (overrides old
+	 *                    content).
+	 * @throws CriticalException when the program can't save the data
+	 */
+	public void writeIntoXML(Object jaxbElement, File file) throws CriticalException {
 		Marshaller marshaller;
 		try {
-			if ((marshaller = getMarshallerFromObj(JAXBElement)) != null) {
+			if ((marshaller = getMarshallerFromObj(jaxbElement)) != null) {
 				try {
-					marshaller.marshal(JAXBElement, file);
+					marshaller.marshal(jaxbElement, file);
 				} catch (JAXBException e) {
 					System.err.println(e.getMessage());
 				}
@@ -119,20 +143,19 @@ public class SudokusDAO {
 	/**
 	 * Reads an XML and transforms it into classes using JAXB tech.
 	 * 
-	 * @param JAXBElement An object of the class you want to insert the data into.
-	 * @param file        The file to read data from
+	 * @param jaxbElement An instance of the class you want to insert the data into.
+	 * @param file        The file to read data from.
 	 * @return T Instance of the Object<T> with all the data.
-	 * @throws CriticalException
+	 * @throws CriticalException when the program can't read the data.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T readFromXML(Object JAXBElement, File file) throws CriticalException {
+	public <T> T readFromXML(Object jaxbElement, File file) throws CriticalException {
 		Unmarshaller unmarshaller;
 		try {
 			if (!file.exists())
 				throw new CriticalException(StructErrors.FILE_NOT_FOUND); // Had to throw manually, couldn't implement
-																			// the
-			// IOException catch clause
-			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null) {
+																			// the IOException catch clause
+			if ((unmarshaller = getUnmarshallerFromObj(jaxbElement)) != null) {
 				return (T) unmarshaller.unmarshal(file);
 			}
 		} catch (CriticalException | JAXBException e) {
@@ -142,26 +165,33 @@ public class SudokusDAO {
 		// TODO THROWS 2 FILE NOT FOUND EXCEPTIONS, ASK MAR
 	}
 
-	private Marshaller getMarshallerFromObj(Object object) throws CriticalException {
+	/**
+	 * Gets the marshaller from an instance
+	 * 
+	 * @param jaxbElement
+	 * @return
+	 * @throws CriticalException
+	 */
+	private Marshaller getMarshallerFromObj(Object jaxbElement) throws CriticalException {
 		try {
-			return getMarshaller(getContext(object));
+			return getMarshaller(getContext(jaxbElement));
 		} catch (JAXBException e) {
 			throw new CriticalException(StructErrors.MARSHALLER_ERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
 			// EXCEPTION
 		}
 	}
 
-	private Unmarshaller getUnmarshallerFromObj(Object object) throws CriticalException {
+	private Unmarshaller getUnmarshallerFromObj(Object jaxbElement) throws CriticalException {
 		try {
-			return getUnmarshaller(getContext(object));
+			return getUnmarshaller(getContext(jaxbElement));
 		} catch (JAXBException e) {
 			throw new CriticalException(StructErrors.UNMARSHALLER_ERROR);
 		}
 	}
 
-	private JAXBContext getContext(Object object) throws CriticalException {
+	private JAXBContext getContext(Object jaxbElement) throws CriticalException {
 		try {
-			return JAXBContext.newInstance(object.getClass());
+			return JAXBContext.newInstance(jaxbElement.getClass());
 		} catch (JAXBException e) {
 			throw new CriticalException(StructErrors.GETTING_CONTEXT_ERROR);
 		}

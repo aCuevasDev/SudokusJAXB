@@ -34,4 +34,12 @@ public class TrashUser {
 //		} while (error);
 //	} 
 	// @formatter:on
+
+// @formatter:off
+//	public Double getMeanTime(User user) {
+//		Double mean = records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
+//				.mapToDouble(Record::getTime).average().orElse(mean = Double.NaN);
+//		return mean.isNaN() ? null : mean;
+//	}
+	// @formatter:on
 }
