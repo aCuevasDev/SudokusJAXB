@@ -1,7 +1,7 @@
 package com.acuevas.sudokus.exceptions;
 
 @SuppressWarnings("serial")
-public class MyException extends Exception {
+public class CriticalException extends Exception {
 
 	private StructErrors error;
 
@@ -13,7 +13,8 @@ public class MyException extends Exception {
 		MARSHALLER_ERROR("Error getting the Marshaller."),
 		UNMARSHALLER_ERROR("Error getting the UnMarshaller."),
 		GETTING_CONTEXT_ERROR("Error getting the context."),
-		ERROR_NOT_SUPPORTED("Error not implemented.");
+		FILE_NOT_FOUND("Error, the program couldn't find the file."),
+		CRITICAL_FAILURE("A critical error happened, the program will restart now.");
 		// @formatter:on
 
 		private String message;
@@ -23,7 +24,7 @@ public class MyException extends Exception {
 		}
 	};
 
-	public MyException(StructErrors error) {
+	public CriticalException(StructErrors error) {
 		this.error = error;
 		printStackTrace();
 	}

@@ -2,10 +2,12 @@ package com.acuevas.sudokus.controller;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.acuevas.sudokus.exceptions.RunnableExceptions;
-import com.acuevas.sudokus.exceptions.RunnableExceptions.RunErrors;
+import com.acuevas.sudokus.exceptions.CriticalException;
+import com.acuevas.sudokus.exceptions.RunnableException;
+import com.acuevas.sudokus.exceptions.RunnableException.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
@@ -13,8 +15,9 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
 import com.acuevas.sudokus.persistance.SudokusDAO;
-import com.acuevas.sudokus.views.View;
-import com.acuevas.sudokus.views.View.Messages;
+import com.acuevas.sudokus.userInteraction.InputAsker;
+import com.acuevas.sudokus.userInteraction.UserInteraction;
+import com.acuevas.sudokus.userInteraction.UserInteraction.Messages;
 
 public class Manager {
 	private static final File XMLSUDOKUS = new File("sudokus.xml");
@@ -28,19 +31,34 @@ public class Manager {
 	private User loggedInUser;
 
 	public static void main(String[] args) {
-		SudokusDAO sudokusDAO = SudokusDAO.getInstance();
-		if (!XMLSUDOKUS.exists()) {
-			sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
-			sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
+		try {
+			SudokusDAO sudokusDAO = SudokusDAO.getInstance();
+			if (!XMLSUDOKUS.exists()) {
+				sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
+				sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
+			}
+			try {
+				sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
+				records = sudokusDAO.readFromXML(records, XMLRECORDS);
+				users = sudokusDAO.readFromXML(users, XMLUSERS);
+			} catch (CriticalException e) {
+				throw e;
+			}
+			System.out.println("Done");
+		} catch (CriticalException e) {
+			System.exit(0);
 		}
-		sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
-		records = sudokusDAO.readFromXML(records, XMLRECORDS);
-		users = sudokusDAO.readFromXML(users, XMLUSERS);
-
-		System.out.println("Done");
 	}
 
-	private void createNewUser() {
+	public void createNewUser(String username, String name, String password) {
+		User user = new User(name, username, password);
+		loggedInUser = user;
+		users.getUsers().add(user);
+	}
+
+	public boolean createNewUser() {
+		// TODO SEPARATE INTO MORE METHODS AND TRY IN THE TEST, DOESN'T DETECT
+		// REGISTERED USERS PROPERLY NOW
 		String username = null;
 		String name;
 		String pswrd;
@@ -54,51 +72,53 @@ public class Manager {
 			try {
 				error = false;
 				if (username == null) {
-					View.printMessage(Messages.ASK_USERNAME, true);
+					UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 					username = InputAsker.pedirCadena("");
 				}
 				if (!users.getUsers().contains(username)) {
-					View.printMessage(Messages.ASK_NAME, true);
+					UserInteraction.printMessage(Messages.ASK_NAME, true);
 					name = InputAsker.pedirCadena("");
 					do {
 						try {
 							error = false;
-							View.printMessage(Messages.ASK_PASSWORD, true);
+							UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
 							pswrd = InputAsker.pedirCadena("");
-							View.printMessage(Messages.ASK_PASSWORD, false);
-							View.printMessage(Messages.AGAIN, true);
+							UserInteraction.printMessage(Messages.ASK_PASSWORD, false);
+							UserInteraction.printMessage(Messages.AGAIN, true);
 							pswrd2 = InputAsker.pedirCadena("");
 							if (pswrd.equals(pswrd2)) {
-								User user = new User();
+								User user = new User(name, username, pswrd);
+								loggedInUser = user;
 								users.getUsers().add(user);
+								return true;
 							} else {
-								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
-								// TODO CREATE EXCEPTIONS TO CONTROL PASSWORDS&USERINUSE
+								throw new RunnableException(RunErrors.PASSWORDS_DONT_MATCH);
 							}
-						} catch (RunnableExceptions e) {
-							View.printError(e.getMessage());
+						} catch (RunnableException e) {
+							UserInteraction.printError(e.getMessage());
 							error = true;
 						}
 					} while (error);
 				} else {
-					throw new RunnableExceptions(RunErrors.USER_IN_USE);
+					throw new RunnableException(RunErrors.USER_IN_USE);
 				}
-			} catch (RunnableExceptions e) {
-				View.printError(e.getMessage());
+			} catch (RunnableException e) {
+				UserInteraction.printError(e.getMessage());
 				username = null;
 				error = true;
 			}
 		} while (error);
+		return false;
 	}
 
-	private void logIn() throws RunnableExceptions {
+	public void logIn() throws RunnableException {
 		boolean error = false;
 
 		do {
-			View.printMessage(Messages.ASK_USERNAME, true);
+			UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 			String username = InputAsker.pedirCadena("");
 
-			View.printMessage(Messages.ASK_PASSWORD, true);
+			UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
 			String password = InputAsker.pedirCadena("");
 
 			User user1 = users.getUsers().stream().filter(user -> user.equals(username)).findFirst().orElse(null);
@@ -106,10 +126,10 @@ public class Manager {
 				if (user1.getPassword().equals(password))
 					loggedInUser = user1;
 				else
-					throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
+					throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 			// TODO DOCUMENTATE WHY I USE THE SAME EXCEPTION ENUM (LESS HACKABLE)
 			else
-				throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
+				throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 		} while (error);
 	}
 // @formatter:off
@@ -122,26 +142,44 @@ public class Manager {
 	} */
 	// @formatter:on
 
-	private List<Sudoku> giveSudoku(User user) {
+	// TODO SEPARATE THIS INTO ANOTHER CLASS
+	/**
+	 * Gets a random Sudoku from the list which the user has not played yet.
+	 * 
+	 * @param user The user loggedIn
+	 * @return a random Sudoku or null if the player has no sudokus left to play.
+	 */
+	public Sudoku getSudokusNotUsed(User user, Sudokus sudokus, Records records) {
 //		List<Sudoku> sudokus1 = loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())))).collect(Collectors.toList());
-		return sudokus.getSudokus().stream()
-				.filter(sudoku -> !sudoku.equals(
-						records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
-								.map(record -> new Sudoku(record.getLevel(), record.getDescription(),
-										record.getUncompletedSudoku(), record.getCompletedSudoku()))))
+		List<Sudoku> sudokusCompleted = records.getRecords().stream()
+				.filter(record -> record.getUsername().equals(user.getUsername()))
+				.map(record -> new Sudoku(record.getLevel(), record.getDescription(), record.getUncompletedSudoku(),
+						record.getCompletedSudoku()))
 				.collect(Collectors.toList());
+		// @formatter:off
+		
+		Integer randomSkip = new Random().nextInt(sudokus.getSudokus().size()-1);
+		return sudokus.getSudokus().stream()
+				.filter(sudoku -> !sudokusCompleted.contains(sudoku))
+				.unordered() // should  be always unordered, and thus return itself, 
+							 // causing no performance losses i use it just to be sure.																								
+				.skip(randomSkip)
+				.findFirst().orElse(null);
+		// @formatter:on
+
 	}
 
-	private void registerRecord(Sudoku sudoku) {
+	public void registerRecord(Sudoku sudoku) {
 		boolean error;
 		do {
 			try {
 				error = false;
 				int time = InputAsker.pedirEntero("");
-				if (!(time <= 0))
-					throw new RunnableExceptions(RunErrors.WRONG_TIME);
-			} catch (RunnableExceptions e) {
-				View.printError(e.getMessage());
+				if (time <= 0)
+					throw new RunnableException(RunErrors.WRONG_TIME);
+			} catch (RunnableException e) {
+				e.printStackTrace();
+//				View.printError(e.getMessage());
 				error = true;
 			}
 		} while (error);
@@ -149,9 +187,9 @@ public class Manager {
 
 	}
 
-	private void reload(Object object) {
+	public void reload(Object object) throws CriticalException {
 		// I'm not using switch because it only accepts constant keys.
-		// I don't like constants tbh.
+		// I don't like using constants if i can avoid it tbh.
 		try {
 			SudokusDAO reader = SudokusDAO.getInstance();
 			Class class1 = object.getClass();
@@ -162,11 +200,34 @@ public class Manager {
 			} else if (class1.equals(users.getClass())) {
 				users = reader.readFromXML(users, XMLUSERS);
 			} else {
-				throw new RunnableExceptions(RunErrors.NOT_SUPPORTED);
+				throw new RunnableException(RunErrors.NOT_SUPPORTED);
 			}
-		} catch (RunnableExceptions e) {
-			View.printError(e.getMessage());
+		} catch (RunnableException e) {
+			UserInteraction.printError(e.getMessage());
 		}
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
+
+	public void finishSudoku() {
+		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
+		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
+		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
+	}
+	
+	public Double getMeanTime(User user){
+mean = records.stream()
+.filter(record -> record.username.equals(user.username))
+.MapToDouble(Record::getTime)
+.average()
+.orElse(mean=Double.NaN);
+return media.isNaN() ? null : mean;
+}
+
+public void getRankings{
+List<Ranking> rankings = users.stream()
+.Map(Ranking::new)
+.collect(Collectors.toList());
+
+Rankings.sort();
+Rankings.forEach(UserInteraction::print);
 }

@@ -1,9 +1,3 @@
-//
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.28 a las 05:50:36 PM CET 
-//
 
 package com.acuevas.sudokus.model.users;
 
@@ -15,6 +9,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.acuevas.sudokus.exceptions.RunnableException;
+import com.acuevas.sudokus.userInteraction.InputAsker;
+import com.acuevas.sudokus.userInteraction.UserInteraction;
 
 /**
  * <p>
@@ -128,6 +126,34 @@ public class Users {
 			this.name = name;
 			this.username = username;
 			this.password = password;
+		}
+
+		/**
+		 * Changes the password of this User, asks the password twice to check they're
+		 * correct.
+		 */
+		public void changePassword() {
+			boolean error;
+			do {
+				error = false;
+				String psword;
+				String psword2;
+				UserInteraction.printMessage(UserInteraction.Messages.ASK_PASSWORD, true);
+				psword = InputAsker.pedirCadena("");
+				if (psword.equals(password)) {
+					UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, true);
+					psword = InputAsker.pedirCadena("");
+					UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, false);
+					UserInteraction.printMessage(UserInteraction.Messages.AGAIN, true);
+					psword2 = InputAsker.pedirCadena("");
+					if (psword.equals(psword2)) {
+						password = psword;
+						UserInteraction.printMessage(UserInteraction.Messages.PSWRD_CHANGED, true);
+					} else
+						UserInteraction.printError(RunnableException.RunErrors.PASSWORDS_DONT_MATCH.toString());
+				} else
+					UserInteraction.printError(UserInteraction.Messages.INCORRECT_PASSWORD.toString());
+			} while (error);
 		}
 
 		/**
