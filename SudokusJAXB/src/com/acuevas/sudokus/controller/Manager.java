@@ -2,6 +2,7 @@ package com.acuevas.sudokus.controller;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.acuevas.sudokus.exceptions.MyException;
@@ -49,7 +50,15 @@ public class Manager {
 		}
 	}
 
-	private void createNewUser() {
+	public void createNewUser(String username, String name, String password) {
+		User user = new User(name, username, password);
+		loggedInUser = user;
+		users.getUsers().add(user);
+	}
+
+	public boolean createNewUser() {
+		// TODO SEPARATE INTO MORE METHODS AND TRY IN THE TEST, DOESN'T DETECT
+		// REGISTERED USERS PROPERLY NOW
 		String username = null;
 		String name;
 		String pswrd;
@@ -81,6 +90,7 @@ public class Manager {
 								User user = new User(name, username, pswrd);
 								loggedInUser = user;
 								users.getUsers().add(user);
+								return true;
 							} else {
 								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
 							}
@@ -98,9 +108,10 @@ public class Manager {
 				error = true;
 			}
 		} while (error);
+		return false;
 	}
 
-	private void logIn() throws RunnableExceptions {
+	public void logIn() throws RunnableExceptions {
 		boolean error = false;
 
 		do {
@@ -131,17 +142,34 @@ public class Manager {
 	} */
 	// @formatter:on
 
-	private List<Sudoku> giveSudoku(User user) {
+	// TODO SEPARATE THIS INTO ANOTHER CLASS
+	/**
+	 * Gets a random Sudoku from the list which the user has not played yet.
+	 * 
+	 * @param user The user loggedIn
+	 * @return a random Sudoku or null if the player has no sudokus left to play.
+	 */
+	public Sudoku getSudokusNotUsed(User user, Sudokus sudokus, Records records) {
 //		List<Sudoku> sudokus1 = loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())))).collect(Collectors.toList());
-		return sudokus.getSudokus().stream()
-				.filter(sudoku -> !sudoku.equals(
-						records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
-								.map(record -> new Sudoku(record.getLevel(), record.getDescription(),
-										record.getUncompletedSudoku(), record.getCompletedSudoku()))))
+		List<Sudoku> sudokusCompleted = records.getRecords().stream()
+				.filter(record -> record.getUsername().equals(user.getUsername()))
+				.map(record -> new Sudoku(record.getLevel(), record.getDescription(), record.getUncompletedSudoku(),
+						record.getCompletedSudoku()))
 				.collect(Collectors.toList());
+		// @formatter:off
+		
+		Integer randomSkip = new Random().nextInt(sudokus.getSudokus().size()-1);
+		return sudokus.getSudokus().stream()
+				.filter(sudoku -> !sudokusCompleted.contains(sudoku))
+				.unordered() // should  be always unordered, and thus return itself, 
+							 // causing no performance losses i use it just to be sure.																								
+				.skip(randomSkip)
+				.findFirst().orElse(null);
+		// @formatter:on
+
 	}
 
-	private void registerRecord(Sudoku sudoku) {
+	public void registerRecord(Sudoku sudoku) {
 		boolean error;
 		do {
 			try {
@@ -159,7 +187,7 @@ public class Manager {
 
 	}
 
-	private void reload(Object object) throws MyException {
+	public void reload(Object object) throws MyException {
 		// I'm not using switch because it only accepts constant keys.
 		// I don't like using constants if i can avoid it tbh.
 		try {
@@ -180,8 +208,10 @@ public class Manager {
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 
-	private void finishSudoku() {
+	public void finishSudoku() {
+		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
 		boolean finished = InputAsker.yesOrNo(View.Messages.FINISH_SUDOKU.toString());
+		int time = InputAsker.pedirEntero(View.Messages.ASK_TIME.toString());
 
 	}
 }

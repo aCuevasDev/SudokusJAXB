@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
+
 /**
  * <p>
  * Clase Java para anonymous complex type.
@@ -151,13 +153,28 @@ public class Records {
 		 */
 		public Record(String username, int time, int level, String description, String uncompletedSudoku,
 				String completedSudoku) {
-			super();
 			this.username = username;
 			this.time = time;
 			this.level = level;
 			this.description = description;
 			this.uncompletedSudoku = uncompletedSudoku;
 			this.completedSudoku = completedSudoku;
+		}
+
+		/**
+		 * Constructor using an instanciated Sudoku
+		 * 
+		 * @param username String
+		 * @param time     int
+		 * @param sudoku   Sudoku object
+		 */
+		public Record(String username, int time, Sudoku sudoku) {
+			this.username = username;
+			this.time = time;
+			this.level = sudoku.getLevel();
+			this.description = sudoku.getDescription();
+			this.uncompletedSudoku = sudoku.getProblem();
+			this.completedSudoku = sudoku.getSolved();
 		}
 
 		/**

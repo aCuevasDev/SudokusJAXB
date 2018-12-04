@@ -131,11 +131,17 @@ public class Sudokus {
 		}
 
 		public Sudoku(Integer level, String description, String unCompletedSudoku, String solvedSudoku) {
-			super();
 			this.problem = unCompletedSudoku;
 			this.solved = solvedSudoku;
 			this.level = level;
 			this.description = description;
+		}
+
+		public Sudoku(Sudoku sudoku) {
+			this.problem = sudoku.getProblem();
+			this.solved = sudoku.getSolved();
+			this.level = sudoku.getLevel();
+			this.description = sudoku.getDescription();
 		}
 
 		/*

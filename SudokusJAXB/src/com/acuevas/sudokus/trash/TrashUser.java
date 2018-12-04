@@ -1,6 +1,6 @@
 package com.acuevas.sudokus.trash;
 
-public class User {
+public class TrashUser {
 	/**
 	 * Methods made in the user class, copied here to prevent overwritting.
 	 */
