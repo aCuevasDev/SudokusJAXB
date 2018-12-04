@@ -222,4 +222,12 @@ mean = records.stream()
 .orElse(mean=Double.NaN);
 return media.isNaN() ? null : mean;
 }
+
+public void getRankings{
+List<Ranking> rankings = users.stream()
+.Map(Ranking::new)
+.collect(Collectors.toList());
+
+Rankings.sort();
+Rankings.forEach(UserInteraction::print);
 }
