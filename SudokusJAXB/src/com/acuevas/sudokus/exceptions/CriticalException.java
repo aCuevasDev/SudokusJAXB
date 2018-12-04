@@ -1,7 +1,7 @@
 package com.acuevas.sudokus.exceptions;
 
 @SuppressWarnings("serial")
-public class MyException extends Exception {
+public class CriticalException extends Exception {
 
 	private StructErrors error;
 
@@ -24,7 +24,7 @@ public class MyException extends Exception {
 		}
 	};
 
-	public MyException(StructErrors error) {
+	public CriticalException(StructErrors error) {
 		this.error = error;
 		printStackTrace();
 	}

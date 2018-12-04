@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.acuevas.sudokus.exceptions.MyException;
-import com.acuevas.sudokus.exceptions.RunnableExceptions;
-import com.acuevas.sudokus.exceptions.RunnableExceptions.RunErrors;
+import com.acuevas.sudokus.exceptions.CriticalException;
+import com.acuevas.sudokus.exceptions.RunnableException;
+import com.acuevas.sudokus.exceptions.RunnableException.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
@@ -15,9 +15,9 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
 import com.acuevas.sudokus.persistance.SudokusDAO;
-import com.acuevas.sudokus.views.InputAsker;
-import com.acuevas.sudokus.views.View;
-import com.acuevas.sudokus.views.View.Messages;
+import com.acuevas.sudokus.userInteraction.InputAsker;
+import com.acuevas.sudokus.userInteraction.UserInteraction;
+import com.acuevas.sudokus.userInteraction.UserInteraction.Messages;
 
 public class Manager {
 	private static final File XMLSUDOKUS = new File("sudokus.xml");
@@ -41,11 +41,11 @@ public class Manager {
 				sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
 				records = sudokusDAO.readFromXML(records, XMLRECORDS);
 				users = sudokusDAO.readFromXML(users, XMLUSERS);
-			} catch (MyException e) {
+			} catch (CriticalException e) {
 				throw e;
 			}
 			System.out.println("Done");
-		} catch (MyException e) {
+		} catch (CriticalException e) {
 			System.exit(0);
 		}
 	}
@@ -72,19 +72,19 @@ public class Manager {
 			try {
 				error = false;
 				if (username == null) {
-					View.printMessage(Messages.ASK_USERNAME, true);
+					UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 					username = InputAsker.pedirCadena("");
 				}
 				if (!users.getUsers().contains(username)) {
-					View.printMessage(Messages.ASK_NAME, true);
+					UserInteraction.printMessage(Messages.ASK_NAME, true);
 					name = InputAsker.pedirCadena("");
 					do {
 						try {
 							error = false;
-							View.printMessage(Messages.ASK_PASSWORD, true);
+							UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
 							pswrd = InputAsker.pedirCadena("");
-							View.printMessage(Messages.ASK_PASSWORD, false);
-							View.printMessage(Messages.AGAIN, true);
+							UserInteraction.printMessage(Messages.ASK_PASSWORD, false);
+							UserInteraction.printMessage(Messages.AGAIN, true);
 							pswrd2 = InputAsker.pedirCadena("");
 							if (pswrd.equals(pswrd2)) {
 								User user = new User(name, username, pswrd);
@@ -92,18 +92,18 @@ public class Manager {
 								users.getUsers().add(user);
 								return true;
 							} else {
-								throw new RunnableExceptions(RunErrors.PASSWORDS_DONT_MATCH);
+								throw new RunnableException(RunErrors.PASSWORDS_DONT_MATCH);
 							}
-						} catch (RunnableExceptions e) {
-							View.printError(e.getMessage());
+						} catch (RunnableException e) {
+							UserInteraction.printError(e.getMessage());
 							error = true;
 						}
 					} while (error);
 				} else {
-					throw new RunnableExceptions(RunErrors.USER_IN_USE);
+					throw new RunnableException(RunErrors.USER_IN_USE);
 				}
-			} catch (RunnableExceptions e) {
-				View.printError(e.getMessage());
+			} catch (RunnableException e) {
+				UserInteraction.printError(e.getMessage());
 				username = null;
 				error = true;
 			}
@@ -111,14 +111,14 @@ public class Manager {
 		return false;
 	}
 
-	public void logIn() throws RunnableExceptions {
+	public void logIn() throws RunnableException {
 		boolean error = false;
 
 		do {
-			View.printMessage(Messages.ASK_USERNAME, true);
+			UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 			String username = InputAsker.pedirCadena("");
 
-			View.printMessage(Messages.ASK_PASSWORD, true);
+			UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
 			String password = InputAsker.pedirCadena("");
 
 			User user1 = users.getUsers().stream().filter(user -> user.equals(username)).findFirst().orElse(null);
@@ -126,10 +126,10 @@ public class Manager {
 				if (user1.getPassword().equals(password))
 					loggedInUser = user1;
 				else
-					throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
+					throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 			// TODO DOCUMENTATE WHY I USE THE SAME EXCEPTION ENUM (LESS HACKABLE)
 			else
-				throw new RunnableExceptions(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
+				throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 		} while (error);
 	}
 // @formatter:off
@@ -176,8 +176,8 @@ public class Manager {
 				error = false;
 				int time = InputAsker.pedirEntero("");
 				if (time <= 0)
-					throw new RunnableExceptions(RunErrors.WRONG_TIME);
-			} catch (RunnableExceptions e) {
+					throw new RunnableException(RunErrors.WRONG_TIME);
+			} catch (RunnableException e) {
 				e.printStackTrace();
 //				View.printError(e.getMessage());
 				error = true;
@@ -187,7 +187,7 @@ public class Manager {
 
 	}
 
-	public void reload(Object object) throws MyException {
+	public void reload(Object object) throws CriticalException {
 		// I'm not using switch because it only accepts constant keys.
 		// I don't like using constants if i can avoid it tbh.
 		try {
@@ -200,18 +200,18 @@ public class Manager {
 			} else if (class1.equals(users.getClass())) {
 				users = reader.readFromXML(users, XMLUSERS);
 			} else {
-				throw new RunnableExceptions(RunErrors.NOT_SUPPORTED);
+				throw new RunnableException(RunErrors.NOT_SUPPORTED);
 			}
-		} catch (RunnableExceptions e) {
-			View.printError(e.getMessage());
+		} catch (RunnableException e) {
+			UserInteraction.printError(e.getMessage());
 		}
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 
 	public void finishSudoku() {
 		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
-		boolean finished = InputAsker.yesOrNo(View.Messages.FINISH_SUDOKU.toString());
-		int time = InputAsker.pedirEntero(View.Messages.ASK_TIME.toString());
+		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
+		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
 
 	}
 }

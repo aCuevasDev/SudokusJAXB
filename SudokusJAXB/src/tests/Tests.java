@@ -77,6 +77,10 @@ class Tests {
 		}
 	}
 
+	/**
+	 * Checks if the getSudokusNotUsed method returns null when all the sudokus are
+	 * completed.
+	 */
 	@Test
 	void randomSudokuWhenAllDone() {
 		final int iterations = 15;
@@ -91,6 +95,9 @@ class Tests {
 		}
 	}
 
+	/**
+	 * Checks if the user you want to register is already registered
+	 */
 	@Test
 	void userAlreadyRegistered() {
 		// TODO THIS PROPERLY BY SEPARATING METHODS IN MANAGER

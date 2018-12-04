@@ -1,4 +1,4 @@
-package com.acuevas.sudokus.views;
+package com.acuevas.sudokus.userInteraction;
 
 import java.io.BufferedReader;
 import java.io.IOException;

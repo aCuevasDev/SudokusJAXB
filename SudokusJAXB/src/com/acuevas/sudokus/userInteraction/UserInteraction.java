@@ -1,6 +1,6 @@
-package com.acuevas.sudokus.views;
+package com.acuevas.sudokus.userInteraction;
 
-public class View {
+public class UserInteraction {
 
 	public enum Messages {
 		ASK_TIME("How long did it take to complete the sudoku?"), ASK_USERNAME("Please, insert your username"),

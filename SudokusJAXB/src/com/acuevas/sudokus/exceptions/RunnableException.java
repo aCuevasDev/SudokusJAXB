@@ -1,7 +1,7 @@
 package com.acuevas.sudokus.exceptions;
 
 @SuppressWarnings("serial")
-public class RunnableExceptions extends Exception {
+public class RunnableException extends Exception {
 //TODO EXCEPTIONS THAT DOESN'T STOP THE PROGRAM
 
 	public enum RunErrors {
@@ -15,7 +15,7 @@ public class RunnableExceptions extends Exception {
 		}
 	};
 
-	public RunnableExceptions(RunErrors error) {
+	public RunnableException(RunErrors error) {
 
 	}
 }
