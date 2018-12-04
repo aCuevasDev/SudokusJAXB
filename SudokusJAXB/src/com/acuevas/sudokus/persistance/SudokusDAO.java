@@ -29,7 +29,20 @@ public class SudokusDAO {
 		return reader;
 	}
 
-	public Sudokus readSudokusTXT(File file) {
+	/**
+	 * Reads and implements the Sudoku from a plain text file with the format 
+	 * // @formatter:off
+	 * % (level) (description) 
+	 * (uncompleted sudoku)
+	 * (completed sudoku)
+	 * // @formatter:on
+	 * 
+	 * @param file the File from where to read the sudokus
+	 * @return Sudokus, an object with a List of Sudoku
+	 * @throws MyException Exceptions that cannot permit the program to continue
+	 * @see MyException
+	 */
+	public Sudokus readSudokusTXT(File file) throws MyException {
 		// TODO MAYBE ERASE THE REPLACE(" ")?
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
@@ -70,7 +83,7 @@ public class SudokusDAO {
 			// STILL WORK CHANGING ONLY VIEW CLASS
 			System.err.println(e.getMessage());
 		} catch (MyException e) {
-			System.err.println(e.getMessage());
+			throw e;
 		} finally {
 			try {
 				bufferedReader.close();
@@ -81,7 +94,7 @@ public class SudokusDAO {
 		return sudokus;
 	}
 
-	public void writeIntoXML(Object JAXBElement, File file) {
+	public void writeIntoXML(Object JAXBElement, File file) throws MyException {
 		Marshaller marshaller;
 		try {
 			if ((marshaller = getMarshallerFromObj(JAXBElement)) != null) {
@@ -92,7 +105,9 @@ public class SudokusDAO {
 				}
 			}
 		} catch (MyException e) {
+			file.delete();
 			e.printStackTrace();
+			throw new MyException(StructErrors.CRITICAL_FAILURE);
 		}
 	}
 
@@ -102,33 +117,24 @@ public class SudokusDAO {
 	 * @param JAXBElement An object of the class you want to insert the data into.
 	 * @param file        The file to read data from
 	 * @return T Instance of the Object<T> with all the data.
+	 * @throws MyException
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T readFromXML(Object JAXBElement, File file) throws MyException {
 		Unmarshaller unmarshaller;
 		try {
 			if (!file.exists())
-				throw new MyException(StructErrors.FILE_NOT_FOUND);
-			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null)
-				try {
-//					if (!file.exists()) // If the file didn't exist the program throwed a IOException and crashed but I
-					// couldn't put the IOException catch clause without throwing it manually, Don't
-					// know why.
-//						throw new IOException(new Throwable("Input Output error"));
-					return (T) unmarshaller.unmarshal(file); // TODO THROWS EXCEPTION WHEN READS NON EXISTANT XML
-//				}
-//					catch (IOException ex) {
-//					ex.printStackTrace();
-//					View.printError(ex.getMessage());
-//					throw new MyException(StructErrors.CRITICAL_FAILURE);
-				} catch (JAXBException e) {
-					e.printStackTrace();
-				}
-		} catch (MyException e) {
+				throw new MyException(StructErrors.FILE_NOT_FOUND); // Had to throw manually, couldn't implement the
+																	// IOException catch clause
+			if ((unmarshaller = getUnmarshallerFromObj(JAXBElement)) != null) {
+				return (T) unmarshaller.unmarshal(file);
+			}
+		} catch (MyException | JAXBException e) {
 			e.printStackTrace();
 			throw new MyException(StructErrors.CRITICAL_FAILURE);
 		}
-		// TODO FIX THIS SO THE STACKTRACE EXCEPTION WORKS PROPERLY
+		return null;
+		// TODO THROWS 2 FILE NOT FOUND EXCEPTIONS, ASK MAR
 	}
 
 	private Marshaller getMarshallerFromObj(Object object) throws MyException {
