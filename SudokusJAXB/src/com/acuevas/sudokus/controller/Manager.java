@@ -212,6 +212,14 @@ public class Manager {
 		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
 		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
 		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
-
 	}
+	
+	public Double getMeanTime(User user){
+mean = records.stream()
+.filter(record -> record.username.equals(user.username))
+.MapToDouble(Record::getTime)
+.average()
+.orElse(mean=Double.NaN);
+return media.isNaN() ? null : mean;
+}
 }
