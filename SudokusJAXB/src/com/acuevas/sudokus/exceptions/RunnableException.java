@@ -15,7 +15,7 @@ public class RunnableException extends Exception {
 		USER_NOT_FOUND_OR_INCORRECT_PASSWORD("User not found or incorrect password"), WRONG_TIME("Time incorrect"),
 		PASSWORDS_DONT_MATCH("Passwords don't match"), USER_IN_USE("Username already in use"),
 		NOT_SUPPORTED("NOT SUPPORTED"), NOT_PLAYING("You're not playing a sudoku"),
-		SAME_PASSWORD("Can't use the same password");
+		SAME_PASSWORD("Can't use the same password"), NOT_PLAYED("You did not play a sudoku");
 
 		private String message;
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.io.File;
 import java.util.Random;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -24,22 +23,19 @@ import com.acuevas.sudokus.utils.SudokuGenerator;
 
 class Tests {
 
-	private static final File XMLSUDOKUS = new File("sudokus.xml");
-	private static final File TXTSUDOKUS = new File("sudokus.txt");
-	private static final File XMLRECORDS = new File("records.xml");
-	private static final File XMLUSERS = new File("users.xml");
 //Model
 	private static Sudokus sudokus = new Sudokus();
 	private static Users users = new Users();
 	private static Records records = new Records();
-//Controller
-	private static Manager manager = new Manager();
 //Test objects
 	private static Sudokus.Sudoku sudoku1;
 	private static Sudokus.Sudoku sudoku2;
 	private static Sudokus.Sudoku sudoku3;
 	private static Users.User user;
 
+	/**
+	 * Inits the fields before the tests
+	 */
 	@BeforeAll
 	static void init() {
 		sudoku1 = new Sudoku(7, "Medium (Level 7)",
@@ -78,9 +74,8 @@ class Tests {
 
 		records.getRecords().add(new Record(user.getUsername(), 60, sudoku1));
 
-		Manager manager = new Manager();
 		for (int i = 0; i < iterations; i++) {
-			Sudoku randSudokuNotUsed = manager.getSudokusNotUsed(user, sudokus, records);
+			Sudoku randSudokuNotUsed = Manager.getSudokusNotUsed(user, sudokus, records);
 			assertFalse((randSudokuNotUsed.equals(sudoku1)));
 		}
 	}
@@ -98,7 +93,7 @@ class Tests {
 		records.getRecords().add(new Record(user.getUsername(), 60, sudoku3));
 
 		for (int i = 0; i < iterations; i++) {
-			Sudoku randSudokuNotUsed = manager.getSudokusNotUsed(user, sudokus, records);
+			Sudoku randSudokuNotUsed = Manager.getSudokusNotUsed(user, sudokus, records);
 			assertNull(randSudokuNotUsed);
 		}
 	}
@@ -109,7 +104,7 @@ class Tests {
 	@Test
 	void usernameRegistered() {
 		String testUsername = "test";
-		assertTrue(manager.usernameInUse(testUsername, users));
+		assertTrue(Manager.usernameInUse(testUsername, users));
 	}
 
 	/**

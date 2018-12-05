@@ -20,6 +20,12 @@ import com.acuevas.sudokus.persistance.SudokusDAO;
 import com.acuevas.sudokus.userInteraction.UserInteraction;
 import com.acuevas.sudokus.userInteraction.UserInteraction.Messages;
 
+/**
+ * Controls the input of the user and the flow of the program
+ * 
+ * @author Alex
+ *
+ */
 public class Manager {
 	private static final File XMLSUDOKUS = new File("sudokus.xml");
 	private static final File TXTSUDOKUS = new File("sudokus.txt");
@@ -78,40 +84,52 @@ public class Manager {
 		}
 	}
 
+	/**
+	 * Once loggedIn shows the menu and controls the flow.
+	 * 
+	 * @throws CriticalException when the program has problems saving/reading data.
+	 */
 	private static void onceLoggedIn() throws CriticalException {
 		int option;
 		do {
 			UserInteraction.printMenu(UserInteraction.menu2);
 			option = InputAsker.pedirEntero("");
-			switch (option) {
-			case 1:
-				loggedInUser.setPlayedSudoku(getSudokusNotUsed(loggedInUser, sudokus, records));
-				UserInteraction.printSudoku(loggedInUser.getPlayedSudoku());
-				registerRecord(loggedInUser, records);
-				break;
-			case 2:
-				registerRecord(loggedInUser, records);
-				store(records);
-				break;
-			case 3:
-				loggedInUser.changePassword();
-				store(users);
-				break;
-			case 4:
-				double mean = Ranking.getMeanTime(loggedInUser, records);
-				UserInteraction.printMessage(UserInteraction.Messages.MEAN_TIME, true);
-				UserInteraction.printString("" + mean);
-				break;
-			case 5:
-				UserInteraction.printRankings(getSortedRankings(users, records));
-				break;
-			case 6:
-				logOut();
-				break;
+			try {
+				switch (option) {
+				case 1:
+					loggedInUser.setPlayedSudoku(getSudokusNotUsed(loggedInUser, sudokus, records));
+					UserInteraction.printSudoku(loggedInUser.getPlayedSudoku());
+					registerRecord(loggedInUser, records);
+					break;
+				case 2:
+					registerRecord(loggedInUser, records);
+					store(records);
+					break;
+				case 3:
+					loggedInUser.changePassword();
+					store(users);
+					break;
+				case 4:
+					if (loggedInUser.hasPlayed(records)) {
+						double mean = Ranking.getMeanTime(loggedInUser, records);
+						UserInteraction.printMessage(UserInteraction.Messages.MEAN_TIME, true);
+						UserInteraction.printString("" + mean);
+					} else
+						throw new RunnableException(RunErrors.NOT_PLAYED);
+					break;
+				case 5:
+					UserInteraction.printRankings(getSortedRankings(users, records));
+					break;
+				case 6:
+					logOut();
+					break;
 
-			default:
-				UserInteraction.printMessage(UserInteraction.Messages.WRONG_KEY, true);
-				break;
+				default:
+					UserInteraction.printMessage(UserInteraction.Messages.WRONG_KEY, true);
+					break;
+				}
+			} catch (RunnableException e) {
+				UserInteraction.printError(e.getMessage());
 			}
 		} while (option != 6);
 	}
@@ -127,6 +145,12 @@ public class Manager {
 		return users.getUsers().stream().anyMatch(user -> user.equals(new User(username)));
 	}
 
+	/**
+	 * Creates a new user and saves it into the XML
+	 * 
+	 * @return true if the user is created succesfully, else false.
+	 * @throws CriticalException when the program has problems saving/reading data.
+	 */
 	public static boolean createNewUser() throws CriticalException {
 		String username = null;
 		String name;
@@ -208,7 +232,7 @@ public class Manager {
 				throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 			}
 		} catch (RunnableException e) {
-			e.getMessage();
+			UserInteraction.printError(e.getMessage());
 			return false;
 		}
 	}
@@ -246,26 +270,23 @@ public class Manager {
 	 * @param records Records where to save the Record
 	 */
 	public static void registerRecord(User user, Records records) {
-		boolean error;
-		do
-			try {
-				error = false;
-				if (InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString())) {
-					int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
-					if (time > 0) {
-						if (user.getPlayedSudoku() != null) {
-							records.getRecords().add(new Record(user.getUsername(), time, user.getPlayedSudoku()));
-							user.setPlayedSudoku(null);
-						} else
-							throw new RunnableException(RunErrors.NOT_PLAYING);
+		try {
+			UserInteraction.printMessage(UserInteraction.Messages.FINISH_SUDOKU, true);
+			if (InputAsker.yesOrNo("")) {
+				UserInteraction.printMessage(UserInteraction.Messages.ASK_TIME, true);
+				int time = InputAsker.pedirEntero("");
+				if (time > 0) {
+					if (user.getPlayedSudoku() != null) {
+						records.getRecords().add(new Record(user.getUsername(), time, user.getPlayedSudoku()));
+						user.setPlayedSudoku(null);
 					} else
-						throw new RunnableException(RunErrors.WRONG_TIME);
-				}
-			} catch (RunnableException e) {
-				UserInteraction.printError(e.getMessage());
-				error = true;
+						throw new RunnableException(RunErrors.NOT_PLAYING);
+				} else
+					throw new RunnableException(RunErrors.WRONG_TIME);
 			}
-		while (error);
+		} catch (RunnableException e) {
+			UserInteraction.printError(e.getMessage());
+		}
 	}
 
 	/**
