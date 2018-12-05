@@ -30,32 +30,90 @@ public class Manager {
 	private static Users users = new Users();
 	private static Records records = new Records();
 
-	private User loggedInUser;
+	private static User loggedInUser;
 
 	public static void main(String[] args) {
 		try {
 			SudokusDAO sudokusDAO = SudokusDAO.getInstance();
 			if (!XMLSUDOKUS.exists()) {
 				sudokus = sudokusDAO.readSudokusTXT(TXTSUDOKUS);
-				sudokusDAO.writeIntoXML(sudokus, XMLSUDOKUS);
+				store(sudokus);
+				store(records);
+				store(users);
+			} else {
+				try {
+					reload(sudokus);
+					reload(users);
+					reload(records);
+				} catch (CriticalException e) {
+					throw e;
+				}
 			}
-			try {
-				sudokus = sudokusDAO.readFromXML(sudokus, XMLSUDOKUS);
-				records = sudokusDAO.readFromXML(records, XMLRECORDS);
-				users = sudokusDAO.readFromXML(users, XMLUSERS);
-			} catch (CriticalException e) {
-				throw e;
-			}
-			System.out.println("Done");
+			int option;
+			do {
+				UserInteraction.printMenu(UserInteraction.menu1);
+				UserInteraction.printMessage(UserInteraction.Messages.CHOOSE_OPTION, true);
+				option = InputAsker.pedirEntero("");
+				switch (option) {
+				case 1:
+					if (logIn())
+						onceLoggedIn();
+					break;
+				case 2:
+					createNewUser();
+					break;
+				case 3:
+					UserInteraction.printMessage(UserInteraction.Messages.GOODBYE, true);
+					break;
+
+				default:
+					UserInteraction.printMessage(UserInteraction.Messages.WRONG_KEY, true);
+					break;
+				}
+			} while (option != 3);
+
 		} catch (CriticalException e) {
+			UserInteraction.printError(e.getMessage());
 			System.exit(0);
 		}
 	}
 
-	public void createNewUser(String username, String name, String password) {
-		User user = new User(name, username, password);
-		loggedInUser = user;
-		users.getUsers().add(user);
+	private static void onceLoggedIn() throws CriticalException {
+		int option;
+		do {
+			UserInteraction.printMenu(UserInteraction.menu2);
+			option = InputAsker.pedirEntero("");
+			switch (option) {
+			case 1:
+				loggedInUser.setPlayedSudoku(getSudokusNotUsed(loggedInUser, sudokus, records));
+				UserInteraction.printSudoku(loggedInUser.getPlayedSudoku());
+				registerRecord(loggedInUser, records);
+				break;
+			case 2:
+				registerRecord(loggedInUser, records);
+				store(records);
+				break;
+			case 3:
+				loggedInUser.changePassword();
+				store(users);
+				break;
+			case 4:
+				double mean = Ranking.getMeanTime(loggedInUser, records);
+				UserInteraction.printMessage(UserInteraction.Messages.MEAN_TIME, true);
+				UserInteraction.printString("" + mean);
+				break;
+			case 5:
+				UserInteraction.printRankings(getSortedRankings(users, records));
+				break;
+			case 6:
+				logOut();
+				break;
+
+			default:
+				UserInteraction.printMessage(UserInteraction.Messages.WRONG_KEY, true);
+				break;
+			}
+		} while (option != 6);
 	}
 
 	/**
@@ -65,13 +123,11 @@ public class Manager {
 	 * @param users    A Users object with all the registered users.
 	 * @return
 	 */
-	public boolean usernameInUse(String username, Users users) {
+	public static boolean usernameInUse(String username, Users users) {
 		return users.getUsers().stream().anyMatch(user -> user.equals(new User(username)));
 	}
 
-	public boolean createNewUser() {
-		// TODO SEPARATE INTO MORE METHODS AND TRY IN THE TEST, DOESN'T DETECT
-		// REGISTERED USERS PROPERLY NOW
+	public static boolean createNewUser() throws CriticalException {
 		String username = null;
 		String name;
 		String pswrd;
@@ -103,6 +159,7 @@ public class Manager {
 								User user = new User(name, username, pswrd);
 								loggedInUser = user;
 								users.getUsers().add(user);
+								store(users);
 								return true;
 							} else
 								throw new RunnableException(RunErrors.PASSWORDS_DONT_MATCH);
@@ -122,36 +179,47 @@ public class Manager {
 		return false;
 	}
 
-	public void logIn() throws RunnableException {
-		boolean error = false;
+	/**
+	 * Logs in the User, asking for a username and password.
+	 * 
+	 * @throws RunnableException
+	 */
+	public static boolean logIn() {
 
-		do {
+		try {
 			UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 			String username = InputAsker.pedirCadena("");
 
 			UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
 			String password = InputAsker.pedirCadena("");
 
-			User user1 = users.getUsers().stream().filter(user -> user.equals(username)).findFirst().orElse(null);
+			User user1 = users.getUsers().stream().filter(user -> user.getUsername().equals(username)).findFirst()
+					.orElse(null);
 			if (user1 != null)
-				if (user1.getPassword().equals(password))
+				if (user1.getPassword().equals(password)) {
 					loggedInUser = user1;
-				else
+					return true;
+				} else {
 					throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
-			// TODO DOCUMENTATE WHY I USE THE SAME EXCEPTION ENUM (LESS HACKABLE)
-			else
+				}
+			// I use the same Enum to not give the user information whether the user already
+			// exists or not to prevent security weaknesses
+			else {
 				throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
-		} while (error);
+			}
+		} catch (RunnableException e) {
+			e.getMessage();
+			return false;
+		}
 	}
 
-	// TODO SEPARATE THIS INTO ANOTHER CLASS
 	/**
 	 * Gets a random Sudoku from the list which the user has not played yet.
 	 *
 	 * @param user The user loggedIn
 	 * @return a random Sudoku or null if the player has no sudokus left to play.
 	 */
-	public Sudoku getSudokusNotUsed(User user, Sudokus sudokus, Records records) {
+	public static Sudoku getSudokusNotUsed(User user, Sudokus sudokus, Records records) {
 		List<Sudoku> sudokusCompleted = records.getRecords().stream()
 				.filter(record -> record.getUsername().equals(user.getUsername()))
 				.map(record -> new Sudoku(record.getLevel(), record.getDescription(), record.getUncompletedSudoku(),
@@ -173,28 +241,31 @@ public class Manager {
 	/**
 	 * Registers the given sudoku into the records of the User
 	 * 
-	 * @param user   the User saving the data.
-	 * @param sudoku the Sudoku to save.
+	 * @param user    the User saving the data.
+	 * @param sudoku  the Sudoku to save.
+	 * @param records Records where to save the Record
 	 */
-	public void registerRecord(User user, Sudoku sudoku) {
-		// TODO TEST THIS
+	public static void registerRecord(User user, Records records) {
 		boolean error;
 		do
 			try {
 				error = false;
-				boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
-				int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
-				if (time > 0)
-					records.getRecords().add(new Record(loggedInUser.getUsername(), time, sudoku));
-				else
-					throw new RunnableException(RunErrors.WRONG_TIME);
+				if (InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString())) {
+					int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
+					if (time > 0) {
+						if (user.getPlayedSudoku() != null) {
+							records.getRecords().add(new Record(user.getUsername(), time, user.getPlayedSudoku()));
+							user.setPlayedSudoku(null);
+						} else
+							throw new RunnableException(RunErrors.NOT_PLAYING);
+					} else
+						throw new RunnableException(RunErrors.WRONG_TIME);
+				}
 			} catch (RunnableException e) {
 				UserInteraction.printError(e.getMessage());
 				error = true;
 			}
 		while (error);
-		Record record;
-
 	}
 
 	/**
@@ -203,7 +274,7 @@ public class Manager {
 	 * @param jaxbElement an instance of a JAXB object.
 	 * @throws CriticalException when the program can't save the data.
 	 */
-	public void reload(Object jaxbElement) throws CriticalException {
+	public static void reload(Object jaxbElement) throws CriticalException {
 		// I'm not using switch because it only accepts constant keys.
 		try {
 			SudokusDAO reader = SudokusDAO.getInstance();
@@ -227,7 +298,7 @@ public class Manager {
 	 * @param jaxbElement an instance of a JAXB object.
 	 * @throws CriticalException when the program can't save the data.
 	 */
-	public void store(Object jaxbElement) throws CriticalException {
+	public static void store(Object jaxbElement) throws CriticalException {
 		// I'm not using switch because it only accepts constant keys.
 		try {
 			SudokusDAO writter = SudokusDAO.getInstance();
@@ -252,7 +323,7 @@ public class Manager {
 	 * @param users
 	 * @return
 	 */
-	public List<Ranking> getSortedRankings(Users users, Records records) {
+	public static List<Ranking> getSortedRankings(Users users, Records records) {
 		// TODO TEST THIS
 		List<Ranking> rankings = users.getUsers().stream().filter(user -> user.hasPlayed(records))
 				.map(user -> new Ranking(user, records)).collect(Collectors.toList());
@@ -300,6 +371,13 @@ public class Manager {
 	 */
 	public static void setRecords(Records records) {
 		Manager.records = records;
+	}
+
+	/**
+	 * Logs the user out
+	 */
+	public static void logOut() {
+		loggedInUser = null;
 	}
 
 }

@@ -104,21 +104,18 @@ class Tests {
 	}
 
 	/**
-	 * Checks if the user you want to register is already registered
+	 * Checks if the username is already registered
 	 */
-//	@Test
-//	void userAlreadyRegistered() {
-//		// TODO THIS PROPERLY BY SEPARATING METHODS IN MANAGER
-//		assertTrue(manager.createNewUser());
-//		assertTrue(manager.createNewUser());
-//	}
-
 	@Test
 	void usernameRegistered() {
 		String testUsername = "test";
 		assertTrue(manager.usernameInUse(testUsername, users));
 	}
 
+	/**
+	 * Checks if the mean time is correct by randomly giving times and expecting a
+	 * double for a number of X iterations
+	 */
 	@Test
 	void getMeanTimeFromUser() {
 		Random random = new Random();
@@ -142,9 +139,26 @@ class Tests {
 			records.getRecords()
 					.add(new Record(user2.getUsername(), random.nextInt(200), sudokuGenerator.getRandomSudoku()));
 		}
-		Ranking ranking = new Ranking(user, records);
-		double meanTime = ranking.getMeanTime(user, records);
+		double meanTime = Ranking.getMeanTime(user, records);
 		assertEquals(expectedMean, meanTime, 0.01);
+	}
+
+	/**
+	 * Checks if the user can finish the sudoku properly.
+	 */
+	@Test
+	void finishSudoku() {
+		user.setPlayedSudoku(sudoku1);
+		Manager.registerRecord(user, records);
+		assertTrue(records.getRecords().stream().anyMatch(record -> record.hasUser(user)));
+	}
+
+	/**
+	 * Checks if the user has played at least one sudoku
+	 */
+	@Test
+	void userHasPlayed() {
+		records.getRecords().add(new Record(user.getUsername(), 20, SudokuGenerator.getInstance().getRandomSudoku()));
 	}
 
 }

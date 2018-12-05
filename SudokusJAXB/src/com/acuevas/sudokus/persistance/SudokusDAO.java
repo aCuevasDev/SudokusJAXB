@@ -47,9 +47,9 @@ public class SudokusDAO {
 	 * (completed sudoku)
 	 * // @formatter:on
 	 *
-	 * @param file the File from where to read the sudokus
-	 * @return Sudokus, an object with a List of Sudoku
-	 * @throws CriticalException Exceptions that cannot permit the program to continue
+	 * @param file the File from where to read the sudokus.
+	 * @return Sudokus, an object with a List of Sudoku.
+	 * @throws CriticalException when the program has problems reading the data.
 	 */
 	public Sudokus readSudokusTXT(File file) throws CriticalException {
 		Sudokus sudokus = new Sudokus();
@@ -79,22 +79,27 @@ public class SudokusDAO {
 					} catch (Exception e) {
 						// catch with generic Exception because no matter why if something goes wrong
 						// here we cannot continue and the struct is bad.
-						throw new CriticalException(StructErrors.PERSISTANCE_STRUCTURE);
+						CriticalException exception = new CriticalException(StructErrors.PERSISTANCE_STRUCTURE);
+						exception.setStackTrace(e.getStackTrace());
+						throw exception;
 					}
 					Sudokus.Sudoku sudoku = new Sudokus.Sudoku(level, description, uncompletedSudoku, completedSudoku);
 					sudokus.getSudokus().add(sudoku);
 				}
 		} catch (IOException e) {
-			// TODO CHANGE THIS INTO A VIEW CLASS, IF I CHANGE THE CONSOLE TO A GUI IT MUST
-			// STILL WORK CHANGING ONLY VIEW CLASS
-			System.err.println(e.getMessage());
-		} catch (CriticalException e) {
-			throw e;
+			CriticalException exception = new CriticalException(StructErrors.FILE_NOT_FOUND);
+			exception.setStackTrace(e.getStackTrace());
+			throw exception;
+
+		} catch (CriticalException e1) {
+			throw e1;
 		} finally {
 			try {
 				bufferedReader.close();
-			} catch (IOException e) {
-				System.err.println(e.getMessage());
+			} catch (Exception e) {
+				CriticalException exception = new CriticalException(StructErrors.BUFFER_NOT_CLOSABLE);
+				exception.setStackTrace(e.getStackTrace());
+				throw exception;
 			}
 		}
 		return sudokus;
@@ -140,8 +145,12 @@ public class SudokusDAO {
 				throw new CriticalException(StructErrors.FILE_NOT_FOUND); // Had to throw manually, couldn't implement
 																			// the IOException catch clause
 			if ((unmarshaller = getUnmarshallerFromObj(jaxbElement)) != null)
-				return (T) unmarshaller.unmarshal(file);
+				if (unmarshaller.unmarshal(file) != null)
+					return (T) unmarshaller.unmarshal(file);
+				else
+					return null;
 		} catch (CriticalException | JAXBException e) {
+			e.printStackTrace();
 			throw new CriticalException(StructErrors.CRITICAL_FAILURE);
 		}
 		return null;
@@ -159,8 +168,7 @@ public class SudokusDAO {
 		try {
 			return getMarshaller(getContext(jaxbElement));
 		} catch (JAXBException e) {
-			throw new CriticalException(StructErrors.MARSHALLER_ERROR); // TODO GET Nº OF THE LINE FROM CODE TO SHOW ON
-			// EXCEPTION
+			throw new CriticalException(StructErrors.MARSHALLER_ERROR);
 		}
 	}
 

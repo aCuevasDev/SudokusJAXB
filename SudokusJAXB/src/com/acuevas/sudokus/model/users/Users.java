@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.acuevas.sudokus.controller.InputAsker;
 import com.acuevas.sudokus.exceptions.RunnableException;
+import com.acuevas.sudokus.exceptions.RunnableException.RunErrors;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.userInteraction.UserInteraction;
@@ -148,24 +149,32 @@ public class Users {
 		public void changePassword() {
 			boolean error;
 			do {
-				error = false;
-				String psword;
-				String psword2;
-				UserInteraction.printMessage(UserInteraction.Messages.ASK_PASSWORD, true);
-				psword = InputAsker.pedirCadena("");
-				if (psword.equals(password)) {
-					UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, true);
+				try {
+					error = false;
+					String psword;
+					String psword2;
+					String psword3;
+					UserInteraction.printMessage(UserInteraction.Messages.ASK_PASSWORD, true);
 					psword = InputAsker.pedirCadena("");
-					UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, false);
-					UserInteraction.printMessage(UserInteraction.Messages.AGAIN, true);
-					psword2 = InputAsker.pedirCadena("");
-					if (psword.equals(psword2)) {
-						password = psword;
-						UserInteraction.printMessage(UserInteraction.Messages.PSWRD_CHANGED, true);
+					if (psword.equals(password)) {
+						UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, true);
+						psword2 = InputAsker.pedirCadena("");
+						if (psword.equals(psword2))
+							throw new RunnableException(RunErrors.SAME_PASSWORD);
+						UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, false);
+						UserInteraction.printMessage(UserInteraction.Messages.AGAIN, true);
+						psword3 = InputAsker.pedirCadena("");
+						if (psword2.equals(psword3)) {
+							password = psword2;
+							UserInteraction.printMessage(UserInteraction.Messages.PSWRD_CHANGED, true);
+						} else
+							throw new RunnableException(RunErrors.PASSWORDS_DONT_MATCH);
 					} else
-						UserInteraction.printError(RunnableException.RunErrors.PASSWORDS_DONT_MATCH.toString());
-				} else
-					UserInteraction.printError(UserInteraction.Messages.INCORRECT_PASSWORD.toString());
+						UserInteraction.printError(UserInteraction.Messages.INCORRECT_PASSWORD.toString());
+				} catch (RunnableException e) {
+					UserInteraction.printError(e.getMessage());
+					error = true;
+				}
 			} while (error);
 		}
 
@@ -178,6 +187,16 @@ public class Users {
 		public boolean hasPlayed(Records records) {
 			// TODO TEST THIS
 			return records.getRecords().stream().anyMatch(record -> record.getUsername().equals(this.getUsername()));
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "User: " + username;
 		}
 
 		/**
@@ -273,6 +292,20 @@ public class Users {
 			} else if (!username.equals(other.username))
 				return false;
 			return true;
+		}
+
+		/**
+		 * @return the playedSudoku
+		 */
+		public Sudoku getPlayedSudoku() {
+			return playedSudoku;
+		}
+
+		/**
+		 * @param playedSudoku the playedSudoku to set
+		 */
+		public void setPlayedSudoku(Sudoku playedSudoku) {
+			this.playedSudoku = playedSudoku;
 		}
 
 	}

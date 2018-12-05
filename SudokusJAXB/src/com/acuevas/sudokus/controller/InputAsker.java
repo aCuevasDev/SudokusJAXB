@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
  */
 public abstract class InputAsker {
 
-	// TODO get the cadena String from view
-
 	public static String pedirCadena(String texto) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String cadena = "";
@@ -83,7 +81,7 @@ public abstract class InputAsker {
 	 * This method only allows the user to input yes or no
 	 *
 	 * @param text
-	 * @return
+	 * @return boolean true if the user said yes, else false.
 	 */
 	public static boolean yesOrNo(String text) {
 		boolean error = false;

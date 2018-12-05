@@ -158,6 +158,16 @@ public class Sudokus {
 
 		/*
 		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "level= " + level + " " + description + "\n Sudoku to solve: " + problem;
+		}
+
+		/*
+		 * (non-Javadoc)
 		 *
 		 * @see java.lang.Object#hashCode()
 		 */

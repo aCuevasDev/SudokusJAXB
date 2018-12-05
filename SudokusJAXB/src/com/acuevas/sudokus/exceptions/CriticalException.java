@@ -14,7 +14,7 @@ public class CriticalException extends Exception {
 		UNMARSHALLER_ERROR("Error getting the UnMarshaller."),
 		GETTING_CONTEXT_ERROR("Error getting the context."),
 		FILE_NOT_FOUND("Error, the program couldn't find the file."),
-		CRITICAL_FAILURE("A critical error happened, the program will restart now.");
+		CRITICAL_FAILURE("A critical error happened, the program will restart now."), BUFFER_NOT_CLOSABLE("Buffer cannot close.");
 		// @formatter:on
 
 		private String message;
@@ -26,7 +26,6 @@ public class CriticalException extends Exception {
 
 	public CriticalException(StructErrors error) {
 		this.error = error;
-		printStackTrace();
 	}
 
 	@Override

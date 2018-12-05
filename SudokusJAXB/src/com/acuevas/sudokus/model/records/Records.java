@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
+import com.acuevas.sudokus.model.users.Users.User;
 
 /**
  * <p>
@@ -174,6 +175,10 @@ public class Records {
 			this.description = sudoku.getDescription();
 			this.uncompletedSudoku = sudoku.getProblem();
 			this.completedSudoku = sudoku.getSolved();
+		}
+
+		public boolean hasUser(User user) {
+			return this.username.equals(user.getUsername());
 		}
 
 		/**

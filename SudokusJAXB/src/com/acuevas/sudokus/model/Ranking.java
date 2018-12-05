@@ -27,7 +27,7 @@ public class Ranking implements Comparable<Ranking> {
 	 * @param records The Records from where to read the data.
 	 * @return Double with either the mean value or null if it's empty.
 	 */
-	public Double getMeanTime(User user, Records records) {
+	public static Double getMeanTime(User user, Records records) {
 		Double mean = records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
 				.mapToDouble(Record::getTime).average().orElse(mean = Double.NaN);
 		return mean.isNaN() ? null : mean;
