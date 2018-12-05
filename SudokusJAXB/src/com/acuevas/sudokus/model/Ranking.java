@@ -4,10 +4,17 @@ import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.users.Users.User;
 
+/**
+ * Class which relates a User and his Record(s), gets the mean time of all the
+ * Record(s) and saves it to compare it with others.
+ * 
+ * @author Alex
+ *
+ */
 public class Ranking implements Comparable<Ranking> {
 
-	User user;
-	Double meanTime;
+	private User user;
+	private Double meanTime;
 
 	/**
 	 * Constructs a Ranking of the given user and its meanTime from saved Records
@@ -93,6 +100,34 @@ public class Ranking implements Comparable<Ranking> {
 	@Override
 	public int compareTo(Ranking ranking) {
 		return this.meanTime.compareTo(ranking.meanTime);
+	}
+
+	/**
+	 * @return the meanTime of this instance
+	 */
+	public Double getMeanTimeFromInstance() {
+		return meanTime;
+	}
+
+	/**
+	 * @param meanTime the meanTime to set
+	 */
+	public void setMeanTime(Double meanTime) {
+		this.meanTime = meanTime;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

@@ -121,11 +121,22 @@ public class Users {
 		@XmlElement(required = true)
 		protected String password;
 
+//I save the played Sudoku in the user, but it's transient so it's not saved into the XML.
 		private transient Sudoku playedSudoku;
 
+		/**
+		 * Empty Constructor
+		 */
 		public User() {
 		}
 
+		/**
+		 * Constructor with all the fields.
+		 * 
+		 * @param name     String the name of the User.
+		 * @param username String the username of the User.
+		 * @param password String the password of the User.
+		 */
 		public User(String name, String username, String password) {
 			this.name = name;
 			this.username = username;
@@ -136,7 +147,7 @@ public class Users {
 		 * Constructor to check if a User is already in use, do not use as a real
 		 * constructor.
 		 * 
-		 * @param username
+		 * @param username String the username of the User.
 		 */
 		public User(String username) {
 			this.username = username;
@@ -190,7 +201,6 @@ public class Users {
 		 * @return true if the player has played at least one sudoku, false if not.
 		 */
 		public boolean hasPlayed(Records records) {
-			// TODO TEST THIS
 			return records.getRecords().stream().anyMatch(record -> record.getUsername().equals(this.getUsername()));
 		}
 

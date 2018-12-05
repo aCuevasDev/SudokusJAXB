@@ -345,7 +345,6 @@ public class Manager {
 	 * @return
 	 */
 	public static List<Ranking> getSortedRankings(Users users, Records records) {
-		// TODO TEST THIS
 		List<Ranking> rankings = users.getUsers().stream().filter(user -> user.hasPlayed(records))
 				.map(user -> new Ranking(user, records)).collect(Collectors.toList());
 		Collections.sort(rankings);

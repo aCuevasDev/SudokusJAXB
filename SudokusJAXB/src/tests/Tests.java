@@ -56,6 +56,9 @@ class Tests {
 		users.getUsers().add(user);
 	}
 
+	/**
+	 * Before each test, resets the records
+	 */
 	@BeforeEach
 	void reset() {
 		records.getRecords().clear();

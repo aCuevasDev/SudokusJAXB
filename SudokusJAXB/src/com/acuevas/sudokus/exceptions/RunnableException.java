@@ -11,6 +11,12 @@ public class RunnableException extends Exception {
 
 	private RunErrors error;
 
+	/**
+	 * An Enum with various errors used in the program.
+	 * 
+	 * @author Alex
+	 *
+	 */
 	public enum RunErrors {
 		USER_NOT_FOUND_OR_INCORRECT_PASSWORD("User not found or incorrect password"), WRONG_TIME("Time incorrect"),
 		PASSWORDS_DONT_MATCH("Passwords don't match"), USER_IN_USE("Username already in use"),

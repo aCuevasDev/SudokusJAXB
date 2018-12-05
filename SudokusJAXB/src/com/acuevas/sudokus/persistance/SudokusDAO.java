@@ -154,7 +154,6 @@ public class SudokusDAO {
 			throw new CriticalException(StructErrors.CRITICAL_FAILURE);
 		}
 		return null;
-		// TODO THROWS 2 FILE NOT FOUND EXCEPTIONS, ASK MAR
 	}
 
 	/**

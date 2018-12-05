@@ -1,10 +1,23 @@
 package com.acuevas.sudokus.exceptions;
 
+/**
+ * This exception occurs when a critical error happens and the application can't
+ * continue, usually related to problems when saving/loading data.
+ * 
+ * @author Alex
+ *
+ */
 @SuppressWarnings("serial")
 public class CriticalException extends Exception {
 
 	private StructErrors error;
 
+	/**
+	 * Various types of errors
+	 * 
+	 * @author Alex
+	 *
+	 */
 	public enum StructErrors {
 
 		// @formatter:off
