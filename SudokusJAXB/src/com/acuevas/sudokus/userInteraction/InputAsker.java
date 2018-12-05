@@ -16,17 +16,16 @@ public abstract class InputAsker {
 	public static String pedirCadena(String texto) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String cadena = "";
-		do {
+		do
 			try {
 				System.out.println(texto);
 				cadena = br.readLine();
-				if (cadena.equals("")) {
+				if (cadena.equals(""))
 					System.out.println("You cannot leave this camp blank.");
-				}
 			} catch (IOException ex) {
 				System.out.println("Input / Output error.");
 			}
-		} while (cadena.equals(""));
+		while (cadena.equals(""));
 		return cadena;
 	}
 
@@ -34,7 +33,7 @@ public abstract class InputAsker {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		double num = 0;
 		boolean error;
-		do {
+		do
 			try {
 				System.out.println(texto);
 				num = Double.parseDouble(br.readLine());
@@ -46,7 +45,7 @@ public abstract class InputAsker {
 				System.out.println("You must insert a number.");
 				error = true;
 			}
-		} while (error);
+		while (error);
 		return num;
 	}
 
@@ -54,7 +53,7 @@ public abstract class InputAsker {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int num = 0;
 		boolean error;
-		do {
+		do
 			try {
 				System.out.println(texto);
 				num = Integer.parseInt(br.readLine());
@@ -66,7 +65,7 @@ public abstract class InputAsker {
 				System.out.println("You must insert an integer number.");
 				error = true;
 			}
-		} while (error);
+		while (error);
 		return num;
 	}
 
@@ -82,7 +81,7 @@ public abstract class InputAsker {
 
 	/**
 	 * This method only allows the user to input yes or no
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -90,7 +89,7 @@ public abstract class InputAsker {
 		boolean error = false;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String cadena = "";
-		do {
+		do
 			try {
 				System.out.println(text);
 				cadena = br.readLine();
@@ -106,7 +105,7 @@ public abstract class InputAsker {
 			} catch (IOException ex) {
 				System.out.println("Input / Output error.");
 			}
-		} while (error);
+		while (error);
 		return false;
 	}
 

@@ -17,11 +17,11 @@ import com.acuevas.sudokus.userInteraction.UserInteraction;
 /**
  * <p>
  * Clase Java para anonymous complex type.
- * 
+ *
  * <p>
  * El siguiente fragmento de esquema especifica el contenido que se espera que
  * haya en esta clase.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -45,8 +45,8 @@ import com.acuevas.sudokus.userInteraction.UserInteraction;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "user" })
@@ -57,41 +57,40 @@ public class Users {
 
 	/**
 	 * Gets the value of the user property.
-	 * 
+	 *
 	 * <p>
 	 * This accessor method returns a reference to the live list, not a snapshot.
 	 * Therefore any modification you make to the returned list will be present
 	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
 	 * for the user property.
-	 * 
+	 *
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getUser().add(newItem);
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * <p>
 	 * Objects of the following type(s) are allowed in the list {@link Users.User }
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public List<Users.User> getUsers() {
-		if (user == null) {
+		if (user == null)
 			user = new ArrayList<Users.User>();
-		}
 		return this.user;
 	}
 
 	/**
 	 * <p>
 	 * Clase Java para anonymous complex type.
-	 * 
+	 *
 	 * <p>
 	 * El siguiente fragmento de esquema especifica el contenido que se espera que
 	 * haya en esta clase.
-	 * 
+	 *
 	 * <pre>
 	 * &lt;complexType>
 	 *   &lt;complexContent>
@@ -105,8 +104,8 @@ public class Users {
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "name", "username", "password" })
@@ -158,9 +157,9 @@ public class Users {
 
 		/**
 		 * Obtiene el valor de la propiedad name.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getName() {
 			return name;
@@ -168,9 +167,9 @@ public class Users {
 
 		/**
 		 * Define el valor de la propiedad name.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setName(String value) {
 			this.name = value;
@@ -178,9 +177,9 @@ public class Users {
 
 		/**
 		 * Obtiene el valor de la propiedad username.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getUsername() {
 			return username;
@@ -188,9 +187,9 @@ public class Users {
 
 		/**
 		 * Define el valor de la propiedad username.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setUsername(String value) {
 			this.username = value;
@@ -198,9 +197,9 @@ public class Users {
 
 		/**
 		 * Obtiene el valor de la propiedad password.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getPassword() {
 			return password;
@@ -208,9 +207,9 @@ public class Users {
 
 		/**
 		 * Define el valor de la propiedad password.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setPassword(String value) {
 			this.password = value;

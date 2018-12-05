@@ -68,7 +68,7 @@ public class Manager {
 		// checking if user == null because if the username is already in use it gets
 		// reseted, but if the user fails at matching passwords the program doesn't ask
 		// for a username again.
-		do {
+		do
 			try {
 				error = false;
 				if (username == null) {
@@ -78,7 +78,7 @@ public class Manager {
 				if (!users.getUsers().contains(username)) {
 					UserInteraction.printMessage(Messages.ASK_NAME, true);
 					name = InputAsker.pedirCadena("");
-					do {
+					do
 						try {
 							error = false;
 							UserInteraction.printMessage(Messages.ASK_PASSWORD, true);
@@ -91,23 +91,21 @@ public class Manager {
 								loggedInUser = user;
 								users.getUsers().add(user);
 								return true;
-							} else {
+							} else
 								throw new RunnableException(RunErrors.PASSWORDS_DONT_MATCH);
-							}
 						} catch (RunnableException e) {
 							UserInteraction.printError(e.getMessage());
 							error = true;
 						}
-					} while (error);
-				} else {
+					while (error);
+				} else
 					throw new RunnableException(RunErrors.USER_IN_USE);
-				}
 			} catch (RunnableException e) {
 				UserInteraction.printError(e.getMessage());
 				username = null;
 				error = true;
 			}
-		} while (error);
+		while (error);
 		return false;
 	}
 
@@ -145,7 +143,7 @@ public class Manager {
 	// TODO SEPARATE THIS INTO ANOTHER CLASS
 	/**
 	 * Gets a random Sudoku from the list which the user has not played yet.
-	 * 
+	 *
 	 * @param user The user loggedIn
 	 * @return a random Sudoku or null if the player has no sudokus left to play.
 	 */
@@ -157,12 +155,12 @@ public class Manager {
 						record.getCompletedSudoku()))
 				.collect(Collectors.toList());
 		// @formatter:off
-		
+
 		Integer randomSkip = new Random().nextInt(sudokus.getSudokus().size()-1);
 		return sudokus.getSudokus().stream()
 				.filter(sudoku -> !sudokusCompleted.contains(sudoku))
-				.unordered() // should  be always unordered, and thus return itself, 
-							 // causing no performance losses i use it just to be sure.																								
+				.unordered() // should  be always unordered, and thus return itself,
+							 // causing no performance losses i use it just to be sure.
 				.skip(randomSkip)
 				.findFirst().orElse(null);
 		// @formatter:on
@@ -171,7 +169,7 @@ public class Manager {
 
 	public void registerRecord(Sudoku sudoku) {
 		boolean error;
-		do {
+		do
 			try {
 				error = false;
 				int time = InputAsker.pedirEntero("");
@@ -182,7 +180,7 @@ public class Manager {
 //				View.printError(e.getMessage());
 				error = true;
 			}
-		} while (error);
+		while (error);
 		Record record;
 
 	}
@@ -193,15 +191,14 @@ public class Manager {
 		try {
 			SudokusDAO reader = SudokusDAO.getInstance();
 			Class class1 = object.getClass();
-			if (class1.equals(sudokus.getClass())) {
+			if (class1.equals(sudokus.getClass()))
 				sudokus = reader.readFromXML(sudokus, XMLSUDOKUS);
-			} else if (class1.equals(records.getClass())) {
+			else if (class1.equals(records.getClass()))
 				records = reader.readFromXML(records, XMLRECORDS);
-			} else if (class1.equals(users.getClass())) {
+			else if (class1.equals(users.getClass()))
 				users = reader.readFromXML(users, XMLUSERS);
-			} else {
+			else
 				throw new RunnableException(RunErrors.NOT_SUPPORTED);
-			}
 		} catch (RunnableException e) {
 			UserInteraction.printError(e.getMessage());
 		}
@@ -214,17 +211,4 @@ public class Manager {
 		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
 	}
 
-	public Double getMeanTime(User user) {
-		Double mean = records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
-				.mapToDouble(Record::getTime).average().orElse(mean = Double.NaN);
-		return mean.isNaN() ? null : mean;
-	}
-
-public void getRankings{
-List<Ranking> rankings = users.stream()
-.Map(Ranking::new)
-.collect(Collectors.toList());
-
-rankings.sort();
-rankings.forEach(UserInteraction::print);
 }

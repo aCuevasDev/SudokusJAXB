@@ -1,14 +1,17 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.acuevas.sudokus.controller.Functions;
 import com.acuevas.sudokus.controller.Manager;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
@@ -16,6 +19,7 @@ import com.acuevas.sudokus.model.sudokus.Sudokus;
 import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
+import com.acuevas.sudokus.utils.SudokuGenerator;
 
 class Tests {
 
@@ -27,7 +31,7 @@ class Tests {
 	private static Sudokus sudokus = new Sudokus();
 	private static Users users = new Users();
 	private static Records records = new Records();
-//Controller	
+//Controller
 	private static Manager manager = new Manager();
 //Test objects
 	private static Sudokus.Sudoku sudoku1;
@@ -55,18 +59,21 @@ class Tests {
 		users.getUsers().add(user);
 	}
 
+	@BeforeEach
+	void reset() {
+		records.getRecords().clear();
+	}
+
 	/**
-	 * Checks if the sudoku given by getSudokusNotUsed from Manager works properly
+	 * Checks if the sudoku given by getSudokusNotUsed from Manager works properly.
 	 * assertFalse if the sudoku given is not the same as sudoku1, the one played by
 	 * the user in any of the iterations.
 	 */
 	@Test
-	void randomSudoku() {
+	void randomSudokuNotUsedByUser() {
 //		Record(String username, int time, int level, String description, String uncompletedSudoku, String completedSudoku)
 //		Sudoku(Integer level, String description, String unCompletedSudoku, String solvedSudoku)
 		final int iterations = 15;
-
-		Users.User user = new User("testname", "test", "1234");
 
 		records.getRecords().add(new Record(user.getUsername(), 60, sudoku1));
 
@@ -98,12 +105,39 @@ class Tests {
 	/**
 	 * Checks if the user you want to register is already registered
 	 */
+//	@Test
+//	void userAlreadyRegistered() {
+//		// TODO THIS PROPERLY BY SEPARATING METHODS IN MANAGER
+//		Users.User user2 = new User("testname", "test", "1234"); // same values as the user field
+//		assertTrue(manager.createNewUser());
+//		assertTrue(manager.createNewUser());
+//	}
+
 	@Test
-	void userAlreadyRegistered() {
-		// TODO THIS PROPERLY BY SEPARATING METHODS IN MANAGER
-		Users.User user2 = new User("testname", "test", "1234"); // same values as the user field
-		assertTrue(manager.createNewUser());
-		assertTrue(manager.createNewUser());
+	void getMeanTimeFromUser() {
+		Random random = new Random();
+		SudokuGenerator sudokuGenerator = SudokuGenerator.getInstance();
+		final float time1 = random.nextInt(200); // made time variables float because if they were int the result of
+													// dividing them is rounded to X.0
+		final float time2 = random.nextInt(200);
+		final float time3 = random.nextInt(200);
+		final Double expectedMean = (double) ((time1 + time2 + time3) / 3);
+		final int iterations = 15;
+
+		records.getRecords().add(new Record(user.getUsername(), (int) time1, sudokuGenerator.getRandomSudoku()));
+		records.getRecords().add(new Record(user.getUsername(), (int) time2, sudokuGenerator.getRandomSudoku()));
+		records.getRecords().add(new Record(user.getUsername(), (int) time3, sudokuGenerator.getRandomSudoku()));
+
+		for (int i = 0; i < iterations; i++) {
+			int index = 2;
+			Users.User user2 = new User("testname" + index, "test" + index++, "1234");
+			records.getRecords()
+					.add(new Record(user2.getUsername(), random.nextInt(200), sudokuGenerator.getRandomSudoku()));
+			records.getRecords()
+					.add(new Record(user2.getUsername(), random.nextInt(200), sudokuGenerator.getRandomSudoku()));
+		}
+		double meanTime = Functions.getMeanTime(user, records);
+		assertEquals(expectedMean, meanTime, 0.01);
 	}
 
 }

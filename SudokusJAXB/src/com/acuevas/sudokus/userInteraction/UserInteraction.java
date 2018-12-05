@@ -1,6 +1,6 @@
 package com.acuevas.sudokus.userInteraction;
 
-public class UserInteraction {
+public abstract class UserInteraction {
 
 	public enum Messages {
 		ASK_TIME("How long did it take to complete the sudoku?"), ASK_USERNAME("Please, insert your username"),
@@ -16,7 +16,7 @@ public class UserInteraction {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -33,7 +33,7 @@ public class UserInteraction {
 	/**
 	 * Prints the specified message on console, if nextLine uses println to jump
 	 * line else stays on the same line
-	 * 
+	 *
 	 * @param message
 	 * @param nextLine
 	 */

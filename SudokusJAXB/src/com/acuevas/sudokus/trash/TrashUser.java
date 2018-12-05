@@ -32,7 +32,7 @@ public class TrashUser {
 //			} else
 //				View.printError(View.Messages.INCORRECT_PASSWORD.toString());
 //		} while (error);
-//	} 
+//	}
 	// @formatter:on
 
 // @formatter:off

@@ -7,13 +7,14 @@ public class Ranking implements Comparable<Ranking> {
 	User user;
 	Double meanTime;
 
-	public Ranking() {
-		// TODO Auto-generated constructor stub
+	public Ranking(User user) {
+		this.user = user;
+
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -27,7 +28,7 @@ public class Ranking implements Comparable<Ranking> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -54,7 +55,7 @@ public class Ranking implements Comparable<Ranking> {
 
 	/**
 	 * toString of Ranking
-	 * 
+	 *
 	 * @return A string with the values of user and meanTime
 	 */
 	@Override
@@ -64,7 +65,7 @@ public class Ranking implements Comparable<Ranking> {
 
 	/**
 	 * Override of compareTo to sort all rankings based on their meanTime
-	 * 
+	 *
 	 * @param a Ranking to compare with
 	 * @return an int with where the Ranking has to move (-1,0,1)
 	 */

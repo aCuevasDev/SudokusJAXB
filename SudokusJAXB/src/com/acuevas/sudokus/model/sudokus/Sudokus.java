@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.28 a las 05:50:00 PM CET 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen.
+// Generado el: 2018.11.28 a las 05:50:00 PM CET
 //
 
 package com.acuevas.sudokus.model.sudokus;
@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>
  * Clase Java para anonymous complex type.
- * 
+ *
  * <p>
  * El siguiente fragmento de esquema especifica el contenido que se espera que
  * haya en esta clase.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -49,8 +49,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "sudoku" })
@@ -61,42 +61,41 @@ public class Sudokus {
 
 	/**
 	 * Gets the value of the sudoku property.
-	 * 
+	 *
 	 * <p>
 	 * This accessor method returns a reference to the live list, not a snapshot.
 	 * Therefore any modification you make to the returned list will be present
 	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
 	 * for the sudoku property.
-	 * 
+	 *
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getSudoku().add(newItem);
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * <p>
 	 * Objects of the following type(s) are allowed in the list
 	 * {@link Sudokus.Sudoku }
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public List<Sudokus.Sudoku> getSudokus() {
-		if (sudoku == null) {
+		if (sudoku == null)
 			sudoku = new ArrayList<Sudokus.Sudoku>();
-		}
 		return this.sudoku;
 	}
 
 	/**
 	 * <p>
 	 * Clase Java para anonymous complex type.
-	 * 
+	 *
 	 * <p>
 	 * El siguiente fragmento de esquema especifica el contenido que se espera que
 	 * haya en esta clase.
-	 * 
+	 *
 	 * <pre>
 	 * &lt;complexType>
 	 *   &lt;complexContent>
@@ -111,8 +110,8 @@ public class Sudokus {
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "problem", "solved" })
@@ -130,6 +129,14 @@ public class Sudokus {
 		public Sudoku() {
 		}
 
+		/**
+		 * Constructor of Sudoku with all the fields
+		 *
+		 * @param level
+		 * @param description
+		 * @param unCompletedSudoku
+		 * @param solvedSudoku
+		 */
 		public Sudoku(Integer level, String description, String unCompletedSudoku, String solvedSudoku) {
 			this.problem = unCompletedSudoku;
 			this.solved = solvedSudoku;
@@ -137,6 +144,11 @@ public class Sudokus {
 			this.description = description;
 		}
 
+		/**
+		 * Constructor of Sudoku copying another Sudoku
+		 *
+		 * @param sudoku
+		 */
 		public Sudoku(Sudoku sudoku) {
 			this.problem = sudoku.getProblem();
 			this.solved = sudoku.getSolved();
@@ -146,7 +158,7 @@ public class Sudokus {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -162,7 +174,7 @@ public class Sudokus {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -199,9 +211,9 @@ public class Sudokus {
 
 		/**
 		 * Obtiene el valor de la propiedad problem.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getProblem() {
 			return problem;
@@ -209,9 +221,9 @@ public class Sudokus {
 
 		/**
 		 * Define el valor de la propiedad problem.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setProblem(String value) {
 			this.problem = value;
@@ -219,9 +231,9 @@ public class Sudokus {
 
 		/**
 		 * Obtiene el valor de la propiedad solved.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getSolved() {
 			return solved;
@@ -229,9 +241,9 @@ public class Sudokus {
 
 		/**
 		 * Define el valor de la propiedad solved.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setSolved(String value) {
 			this.solved = value;
@@ -239,9 +251,9 @@ public class Sudokus {
 
 		/**
 		 * Obtiene el valor de la propiedad level.
-		 * 
+		 *
 		 * @return possible object is {@link Integer }
-		 * 
+		 *
 		 */
 		public Integer getLevel() {
 			return level;
@@ -249,9 +261,9 @@ public class Sudokus {
 
 		/**
 		 * Define el valor de la propiedad level.
-		 * 
+		 *
 		 * @param value allowed object is {@link Integer }
-		 * 
+		 *
 		 */
 		public void setLevel(Integer value) {
 			this.level = value;
@@ -259,9 +271,9 @@ public class Sudokus {
 
 		/**
 		 * Obtiene el valor de la propiedad description.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getDescription() {
 			return description;
@@ -269,9 +281,9 @@ public class Sudokus {
 
 		/**
 		 * Define el valor de la propiedad description.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setDescription(String value) {
 			this.description = value;

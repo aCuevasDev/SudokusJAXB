@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.28 a las 05:50:18 PM CET 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen.
+// Generado el: 2018.11.28 a las 05:50:18 PM CET
 //
 
 package com.acuevas.sudokus.model.records;
@@ -21,11 +21,11 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 /**
  * <p>
  * Clase Java para anonymous complex type.
- * 
+ *
  * <p>
  * El siguiente fragmento de esquema especifica el contenido que se espera que
  * haya en esta clase.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -52,8 +52,8 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "record" })
@@ -64,42 +64,41 @@ public class Records {
 
 	/**
 	 * Gets the value of the record property.
-	 * 
+	 *
 	 * <p>
 	 * This accessor method returns a reference to the live list, not a snapshot.
 	 * Therefore any modification you make to the returned list will be present
 	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
 	 * for the record property.
-	 * 
+	 *
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getRecord().add(newItem);
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * <p>
 	 * Objects of the following type(s) are allowed in the list
 	 * {@link Records.Record }
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public List<Records.Record> getRecords() {
-		if (record == null) {
+		if (record == null)
 			record = new ArrayList<Records.Record>();
-		}
 		return this.record;
 	}
 
 	/**
 	 * <p>
 	 * Clase Java para anonymous complex type.
-	 * 
+	 *
 	 * <p>
 	 * El siguiente fragmento de esquema especifica el contenido que se espera que
 	 * haya en esta clase.
-	 * 
+	 *
 	 * <pre>
 	 * &lt;complexType>
 	 *   &lt;complexContent>
@@ -116,8 +115,8 @@ public class Records {
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "username", "time", "level", "description", "uncompletedSudoku",
@@ -143,7 +142,7 @@ public class Records {
 
 		/**
 		 * Constructor with all its fields.
-		 * 
+		 *
 		 * @param username          String
 		 * @param time              int
 		 * @param level             int
@@ -163,7 +162,7 @@ public class Records {
 
 		/**
 		 * Constructor using an instanciated Sudoku
-		 * 
+		 *
 		 * @param username String
 		 * @param time     int
 		 * @param sudoku   Sudoku object
@@ -179,9 +178,9 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad username.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getUsername() {
 			return username;
@@ -189,9 +188,9 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad username.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setUsername(String value) {
 			this.username = value;
@@ -199,7 +198,7 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad time.
-		 * 
+		 *
 		 */
 		public int getTime() {
 			return time;
@@ -207,7 +206,7 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad time.
-		 * 
+		 *
 		 */
 		public void setTime(int value) {
 			this.time = value;
@@ -215,7 +214,7 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad level.
-		 * 
+		 *
 		 */
 		public int getLevel() {
 			return level;
@@ -223,7 +222,7 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad level.
-		 * 
+		 *
 		 */
 		public void setLevel(int value) {
 			this.level = value;
@@ -231,9 +230,9 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad description.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getDescription() {
 			return description;
@@ -241,9 +240,9 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad description.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setDescription(String value) {
 			this.description = value;
@@ -251,9 +250,9 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad uncompletedSudoku.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getUncompletedSudoku() {
 			return uncompletedSudoku;
@@ -261,9 +260,9 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad uncompletedSudoku.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setUncompletedSudoku(String value) {
 			this.uncompletedSudoku = value;
@@ -271,9 +270,9 @@ public class Records {
 
 		/**
 		 * Obtiene el valor de la propiedad completedSudoku.
-		 * 
+		 *
 		 * @return possible object is {@link String }
-		 * 
+		 *
 		 */
 		public String getCompletedSudoku() {
 			return completedSudoku;
@@ -281,9 +280,9 @@ public class Records {
 
 		/**
 		 * Define el valor de la propiedad completedSudoku.
-		 * 
+		 *
 		 * @param value allowed object is {@link String }
-		 * 
+		 *
 		 */
 		public void setCompletedSudoku(String value) {
 			this.completedSudoku = value;

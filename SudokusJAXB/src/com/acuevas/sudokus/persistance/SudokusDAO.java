@@ -17,7 +17,7 @@ import com.acuevas.sudokus.model.sudokus.Sudokus;
 import com.acuevas.sudokus.model.users.Users;
 
 /**
- * 
+ *
  * @author Alex
  *
  */
@@ -41,7 +41,7 @@ public class SudokusDAO {
 
 	/**
 	 * Gets the instance of this class, if none exists then it creates one.
-	 * 
+	 *
 	 * @return SudokusDAO
 	 */
 	public static SudokusDAO getInstance() {
@@ -51,13 +51,13 @@ public class SudokusDAO {
 	}
 
 	/**
-	 * Reads and implements the Sudoku from a plain text file with the format 
+	 * Reads and implements the Sudoku from a plain text file with the format
 	 * // @formatter:off
-	 * % (level) (description) 
+	 * % (level) (description)
 	 * (uncompleted sudoku)
 	 * (completed sudoku)
 	 * // @formatter:on
-	 * 
+	 *
 	 * @param file the File from where to read the sudokus
 	 * @return Sudokus, an object with a List of Sudoku
 	 * @throws CriticalException Exceptions that cannot permit the program to continue
@@ -76,7 +76,7 @@ public class SudokusDAO {
 			String uncompletedSudoku;
 			String completedSudoku;
 
-			while ((line = bufferedReader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null)
 				if (line.substring(0, 1).equals("%")) {
 					line = line.replace(" ", ""); // to remove different spacings between sudokus
 					try {
@@ -84,10 +84,8 @@ public class SudokusDAO {
 						description = line.substring(2, line.length());
 						uncompletedSudoku = bufferedReader.readLine();
 						completedSudoku = bufferedReader.readLine();
-						if (uncompletedSudoku.length() != 80 + 1 | completedSudoku.length() != 80 + 1) {
-							// 80+1 because length starts counting on 1 instead of 0.
+						if (uncompletedSudoku.length() != 81 | completedSudoku.length() != 81)
 							throw new CriticalException(StructErrors.SUDOKUES_NOT_CORRECT);
-						}
 					} catch (CriticalException ex) {
 						throw ex;
 					} catch (Exception e) {
@@ -98,7 +96,6 @@ public class SudokusDAO {
 					Sudokus.Sudoku sudoku = new Sudokus.Sudoku(level, description, uncompletedSudoku, completedSudoku);
 					sudokus.getSudokus().add(sudoku);
 				}
-			}
 		} catch (IOException e) {
 			// TODO CHANGE THIS INTO A VIEW CLASS, IF I CHANGE THE CONSOLE TO A GUI IT MUST
 			// STILL WORK CHANGING ONLY VIEW CLASS
@@ -117,7 +114,7 @@ public class SudokusDAO {
 
 	/**
 	 * Writes the JAXBElement object into and XML file using JAXB tech. (marshaller)
-	 * 
+	 *
 	 * @param jaxbElement an instance of an object compatible with JAXB tech.
 	 * @param file        the File where you want to save data into (overrides old
 	 *                    content).
@@ -126,13 +123,12 @@ public class SudokusDAO {
 	public void writeIntoXML(Object jaxbElement, File file) throws CriticalException {
 		Marshaller marshaller;
 		try {
-			if ((marshaller = getMarshallerFromObj(jaxbElement)) != null) {
+			if ((marshaller = getMarshallerFromObj(jaxbElement)) != null)
 				try {
 					marshaller.marshal(jaxbElement, file);
 				} catch (JAXBException e) {
 					System.err.println(e.getMessage());
 				}
-			}
 		} catch (CriticalException e) {
 			file.delete();
 			e.printStackTrace();
@@ -142,7 +138,7 @@ public class SudokusDAO {
 
 	/**
 	 * Reads an XML and transforms it into classes using JAXB tech.
-	 * 
+	 *
 	 * @param jaxbElement An instance of the class you want to insert the data into.
 	 * @param file        The file to read data from.
 	 * @return T Instance of the Object<T> with all the data.
@@ -155,9 +151,8 @@ public class SudokusDAO {
 			if (!file.exists())
 				throw new CriticalException(StructErrors.FILE_NOT_FOUND); // Had to throw manually, couldn't implement
 																			// the IOException catch clause
-			if ((unmarshaller = getUnmarshallerFromObj(jaxbElement)) != null) {
+			if ((unmarshaller = getUnmarshallerFromObj(jaxbElement)) != null)
 				return (T) unmarshaller.unmarshal(file);
-			}
 		} catch (CriticalException | JAXBException e) {
 			throw new CriticalException(StructErrors.CRITICAL_FAILURE);
 		}
@@ -167,7 +162,7 @@ public class SudokusDAO {
 
 	/**
 	 * Gets the marshaller from an instance
-	 * 
+	 *
 	 * @param jaxbElement
 	 * @return
 	 * @throws CriticalException
@@ -203,5 +198,47 @@ public class SudokusDAO {
 
 	private Marshaller getMarshaller(JAXBContext context) throws JAXBException {
 		return context.createMarshaller();
+	}
+
+	/**
+	 * @return the sudokus
+	 */
+	public static Sudokus getSudokus() {
+		return sudokus;
+	}
+
+	/**
+	 * @param sudokus the sudokus to set
+	 */
+	public static void setSudokus(Sudokus sudokus) {
+		SudokusDAO.sudokus = sudokus;
+	}
+
+	/**
+	 * @return the users
+	 */
+	public static Users getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public static void setUsers(Users users) {
+		SudokusDAO.users = users;
+	}
+
+	/**
+	 * @return the records
+	 */
+	public static Records getRecords() {
+		return records;
+	}
+
+	/**
+	 * @param records the records to set
+	 */
+	public static void setRecords(Records records) {
+		SudokusDAO.records = records;
 	}
 }

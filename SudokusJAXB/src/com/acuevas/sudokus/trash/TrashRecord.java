@@ -5,7 +5,7 @@ public class TrashRecord {
 /*
 	/**
 	 * Constructor with all its fields.
-	 * 
+	 *
 	 * @param username          String
 	 * @param time              int
 	 * @param level             int
@@ -25,7 +25,7 @@ public class TrashRecord {
 
 	/**
 	 * Constructor using an instanciated Sudoku
-	 * 
+	 *
 	 * @param username String
 	 * @param time     int
 	 * @param sudoku   Sudoku object
