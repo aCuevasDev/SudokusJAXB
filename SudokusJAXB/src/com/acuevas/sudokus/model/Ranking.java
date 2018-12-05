@@ -1,5 +1,7 @@
 package com.acuevas.sudokus.model;
 
+import com.acuevas.sudokus.model.records.Records;
+import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.users.Users.User;
 
 public class Ranking implements Comparable<Ranking> {
@@ -7,9 +9,28 @@ public class Ranking implements Comparable<Ranking> {
 	User user;
 	Double meanTime;
 
-	public Ranking(User user) {
+	/**
+	 * Constructs a Ranking of the given user and its meanTime from saved Records
+	 * 
+	 * @param user    The given User from whom create a new Ranking.
+	 * @param records Records where to find his games.
+	 */
+	public Ranking(User user, Records records) {
 		this.user = user;
+		meanTime = getMeanTime(user, records);
+	}
 
+	/**
+	 * Gets the mean time from the Record(s) of a specified User
+	 * 
+	 * @param user    The user you want the mean from.
+	 * @param records The Records from where to read the data.
+	 * @return Double with either the mean value or null if it's empty.
+	 */
+	public Double getMeanTime(User user, Records records) {
+		Double mean = records.getRecords().stream().filter(record -> record.getUsername().equals(user.getUsername()))
+				.mapToDouble(Record::getTime).average().orElse(mean = Double.NaN);
+		return mean.isNaN() ? null : mean;
 	}
 
 	/*
@@ -71,8 +92,7 @@ public class Ranking implements Comparable<Ranking> {
 	 */
 	@Override
 	public int compareTo(Ranking ranking) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.meanTime.compareTo(ranking.meanTime);
 	}
 
 }

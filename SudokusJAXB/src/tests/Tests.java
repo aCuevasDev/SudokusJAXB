@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
@@ -11,8 +12,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.acuevas.sudokus.controller.Functions;
 import com.acuevas.sudokus.controller.Manager;
+import com.acuevas.sudokus.model.Ranking;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
@@ -108,10 +109,15 @@ class Tests {
 //	@Test
 //	void userAlreadyRegistered() {
 //		// TODO THIS PROPERLY BY SEPARATING METHODS IN MANAGER
-//		Users.User user2 = new User("testname", "test", "1234"); // same values as the user field
 //		assertTrue(manager.createNewUser());
 //		assertTrue(manager.createNewUser());
 //	}
+
+	@Test
+	void usernameRegistered() {
+		String testUsername = "test";
+		assertTrue(manager.usernameInUse(testUsername, users));
+	}
 
 	@Test
 	void getMeanTimeFromUser() {
@@ -136,7 +142,8 @@ class Tests {
 			records.getRecords()
 					.add(new Record(user2.getUsername(), random.nextInt(200), sudokuGenerator.getRandomSudoku()));
 		}
-		double meanTime = Functions.getMeanTime(user, records);
+		Ranking ranking = new Ranking(user, records);
+		double meanTime = ranking.getMeanTime(user, records);
 		assertEquals(expectedMean, meanTime, 0.01);
 	}
 

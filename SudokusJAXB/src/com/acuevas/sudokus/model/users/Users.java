@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.acuevas.sudokus.controller.InputAsker;
 import com.acuevas.sudokus.exceptions.RunnableException;
+import com.acuevas.sudokus.model.records.Records;
+import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.userInteraction.UserInteraction;
 
 /**
@@ -118,6 +120,8 @@ public class Users {
 		@XmlElement(required = true)
 		protected String password;
 
+		private transient Sudoku playedSudoku;
+
 		public User() {
 		}
 
@@ -125,6 +129,16 @@ public class Users {
 			this.name = name;
 			this.username = username;
 			this.password = password;
+		}
+
+		/**
+		 * Constructor to check if a User is already in use, do not use as a real
+		 * constructor.
+		 * 
+		 * @param username
+		 */
+		public User(String username) {
+			this.username = username;
 		}
 
 		/**
@@ -153,6 +167,17 @@ public class Users {
 				} else
 					UserInteraction.printError(UserInteraction.Messages.INCORRECT_PASSWORD.toString());
 			} while (error);
+		}
+
+		/**
+		 * Returns whether the player has played at least one sudoku
+		 * 
+		 * @param records the Records saved.
+		 * @return true if the player has played at least one sudoku, false if not.
+		 */
+		public boolean hasPlayed(Records records) {
+			// TODO TEST THIS
+			return records.getRecords().stream().anyMatch(record -> record.getUsername().equals(this.getUsername()));
 		}
 
 		/**
@@ -213,6 +238,41 @@ public class Users {
 		 */
 		public void setPassword(String value) {
 			this.password = value;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((username == null) ? 0 : username.hashCode());
+			return result;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			User other = (User) obj;
+			if (username == null) {
+				if (other.username != null)
+					return false;
+			} else if (!username.equals(other.username))
+				return false;
+			return true;
 		}
 
 	}

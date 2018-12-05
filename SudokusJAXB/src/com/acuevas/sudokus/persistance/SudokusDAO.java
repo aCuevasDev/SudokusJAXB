@@ -12,9 +12,7 @@ import javax.xml.bind.Unmarshaller;
 
 import com.acuevas.sudokus.exceptions.CriticalException;
 import com.acuevas.sudokus.exceptions.CriticalException.StructErrors;
-import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
-import com.acuevas.sudokus.model.users.Users;
 
 /**
  *
@@ -23,15 +21,6 @@ import com.acuevas.sudokus.model.users.Users;
  */
 public class SudokusDAO {
 	// All the data is managed in the DAO.
-
-	private static final File XMLSUDOKUS = new File("sudokus.xml");
-	private static final File TXTSUDOKUS = new File("sudokus.txt");
-	private static final File XMLRECORDS = new File("records.xml");
-	private static final File XMLUSERS = new File("users.xml");
-
-	private static Sudokus sudokus = new Sudokus();
-	private static Users users = new Users();
-	private static Records records = new Records();
 
 	private static SudokusDAO sudokusDAO;
 
@@ -61,7 +50,6 @@ public class SudokusDAO {
 	 * @param file the File from where to read the sudokus
 	 * @return Sudokus, an object with a List of Sudoku
 	 * @throws CriticalException Exceptions that cannot permit the program to continue
-	 * @see CriticalException
 	 */
 	public Sudokus readSudokusTXT(File file) throws CriticalException {
 		Sudokus sudokus = new Sudokus();
@@ -198,47 +186,5 @@ public class SudokusDAO {
 
 	private Marshaller getMarshaller(JAXBContext context) throws JAXBException {
 		return context.createMarshaller();
-	}
-
-	/**
-	 * @return the sudokus
-	 */
-	public static Sudokus getSudokus() {
-		return sudokus;
-	}
-
-	/**
-	 * @param sudokus the sudokus to set
-	 */
-	public static void setSudokus(Sudokus sudokus) {
-		SudokusDAO.sudokus = sudokus;
-	}
-
-	/**
-	 * @return the users
-	 */
-	public static Users getUsers() {
-		return users;
-	}
-
-	/**
-	 * @param users the users to set
-	 */
-	public static void setUsers(Users users) {
-		SudokusDAO.users = users;
-	}
-
-	/**
-	 * @return the records
-	 */
-	public static Records getRecords() {
-		return records;
-	}
-
-	/**
-	 * @param records the records to set
-	 */
-	public static void setRecords(Records records) {
-		SudokusDAO.records = records;
 	}
 }

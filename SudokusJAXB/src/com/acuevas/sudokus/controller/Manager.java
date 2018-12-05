@@ -1,6 +1,7 @@
 package com.acuevas.sudokus.controller;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import com.acuevas.sudokus.exceptions.CriticalException;
 import com.acuevas.sudokus.exceptions.RunnableException;
 import com.acuevas.sudokus.exceptions.RunnableException.RunErrors;
+import com.acuevas.sudokus.model.Ranking;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
 import com.acuevas.sudokus.model.sudokus.Sudokus;
@@ -27,6 +29,7 @@ public class Manager {
 	private static Sudokus sudokus = new Sudokus();
 	private static Users users = new Users();
 	private static Records records = new Records();
+
 	private User loggedInUser;
 
 	public static void main(String[] args) {
@@ -55,6 +58,17 @@ public class Manager {
 		users.getUsers().add(user);
 	}
 
+	/**
+	 * Checks if the given username is in use in the given Users.
+	 * 
+	 * @param username String, the username.
+	 * @param users    A Users object with all the registered users.
+	 * @return
+	 */
+	public boolean usernameInUse(String username, Users users) {
+		return users.getUsers().stream().anyMatch(user -> user.equals(new User(username)));
+	}
+
 	public boolean createNewUser() {
 		// TODO SEPARATE INTO MORE METHODS AND TRY IN THE TEST, DOESN'T DETECT
 		// REGISTERED USERS PROPERLY NOW
@@ -74,7 +88,7 @@ public class Manager {
 					UserInteraction.printMessage(Messages.ASK_USERNAME, true);
 					username = InputAsker.pedirCadena("");
 				}
-				if (!users.getUsers().contains(username)) {
+				if (!usernameInUse(username, users)) {
 					UserInteraction.printMessage(Messages.ASK_NAME, true);
 					name = InputAsker.pedirCadena("");
 					do
@@ -129,15 +143,6 @@ public class Manager {
 				throw new RunnableException(RunErrors.USER_NOT_FOUND_OR_INCORRECT_PASSWORD);
 		} while (error);
 	}
-// @formatter:off
-	//TODO ERASE THIS
-/*	@Deprecated
-	private void insertRecordsIntoUser(Records records, User user) {
-		List<Record> recordsList = records.getRecords().stream()
-				.filter(record -> record.getUsername().equals(user.getUsername())).collect(Collectors.toList());
-		user.setRecords(recordsList);
-	} */
-	// @formatter:on
 
 	// TODO SEPARATE THIS INTO ANOTHER CLASS
 	/**
@@ -147,7 +152,6 @@ public class Manager {
 	 * @return a random Sudoku or null if the player has no sudokus left to play.
 	 */
 	public Sudoku getSudokusNotUsed(User user, Sudokus sudokus, Records records) {
-//		List<Sudoku> sudokus1 = loggedInUser.getRecords().stream().filter(record -> !(record.getCode().equals(sudokus.getSudokus().stream().map(sudoku -> sudoku.getCode())))).collect(Collectors.toList());
 		List<Sudoku> sudokusCompleted = records.getRecords().stream()
 				.filter(record -> record.getUsername().equals(user.getUsername()))
 				.map(record -> new Sudoku(record.getLevel(), record.getDescription(), record.getUncompletedSudoku(),
@@ -155,28 +159,37 @@ public class Manager {
 				.collect(Collectors.toList());
 		// @formatter:off
 
-		Integer randomSkip = new Random().nextInt(sudokus.getSudokus().size()-1);
+		int randomSkip = new Random().nextInt(sudokus.getSudokus().size()-1);
 		return sudokus.getSudokus().stream()
 				.filter(sudoku -> !sudokusCompleted.contains(sudoku))
 				.unordered() // should  be always unordered, and thus return itself,
-							 // causing no performance losses i use it just to be sure.
+							 // causing no performance losses, I use it just to be sure.
 				.skip(randomSkip)
 				.findFirst().orElse(null);
 		// @formatter:on
 
 	}
 
-	public void registerRecord(Sudoku sudoku) {
+	/**
+	 * Registers the given sudoku into the records of the User
+	 * 
+	 * @param user   the User saving the data.
+	 * @param sudoku the Sudoku to save.
+	 */
+	public void registerRecord(User user, Sudoku sudoku) {
+		// TODO TEST THIS
 		boolean error;
 		do
 			try {
 				error = false;
-				int time = InputAsker.pedirEntero("");
-				if (time <= 0)
+				boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
+				int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
+				if (time > 0)
+					records.getRecords().add(new Record(loggedInUser.getUsername(), time, sudoku));
+				else
 					throw new RunnableException(RunErrors.WRONG_TIME);
 			} catch (RunnableException e) {
-				e.printStackTrace();
-//				View.printError(e.getMessage());
+				UserInteraction.printError(e.getMessage());
 				error = true;
 			}
 		while (error);
@@ -184,12 +197,17 @@ public class Manager {
 
 	}
 
-	public void reload(Object object) throws CriticalException {
+	/**
+	 * Reloads the given object, reading data from its XML
+	 * 
+	 * @param jaxbElement an instance of a JAXB object.
+	 * @throws CriticalException when the program can't save the data.
+	 */
+	public void reload(Object jaxbElement) throws CriticalException {
 		// I'm not using switch because it only accepts constant keys.
-		// I don't like using constants if i can avoid it tbh.
 		try {
 			SudokusDAO reader = SudokusDAO.getInstance();
-			Class class1 = object.getClass();
+			Class<? extends Object> class1 = jaxbElement.getClass();
 			if (class1.equals(sudokus.getClass()))
 				sudokus = reader.readFromXML(sudokus, XMLSUDOKUS);
 			else if (class1.equals(records.getClass()))
@@ -201,14 +219,87 @@ public class Manager {
 		} catch (RunnableException e) {
 			UserInteraction.printError(e.getMessage());
 		}
-		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 
-	public void finishSudoku(Sudoku sudoku) {
-		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
-		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
-		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
-		records.getRecords()
+	/**
+	 * Saves the given object into its XML
+	 * 
+	 * @param jaxbElement an instance of a JAXB object.
+	 * @throws CriticalException when the program can't save the data.
+	 */
+	public void store(Object jaxbElement) throws CriticalException {
+		// I'm not using switch because it only accepts constant keys.
+		try {
+			SudokusDAO writter = SudokusDAO.getInstance();
+			Class<? extends Object> class1 = jaxbElement.getClass();
+			if (class1.equals(sudokus.getClass()))
+				writter.writeIntoXML(jaxbElement, XMLSUDOKUS);
+			else if (class1.equals(records.getClass()))
+				writter.writeIntoXML(jaxbElement, XMLRECORDS);
+			else if (class1.equals(users.getClass()))
+				writter.writeIntoXML(jaxbElement, XMLUSERS);
+			else
+				throw new RunnableException(RunErrors.NOT_SUPPORTED);
+		} catch (RunnableException e) {
+			UserInteraction.printError(e.getMessage());
+		}
+	}
+
+	/**
+	 * Gets a List with all the rankings sorted by the mean time of the players.
+	 * Note: it needs records from manager to have data, else will return null
+	 * 
+	 * @param users
+	 * @return
+	 */
+	public List<Ranking> getSortedRankings(Users users, Records records) {
+		// TODO TEST THIS
+		List<Ranking> rankings = users.getUsers().stream().filter(user -> user.hasPlayed(records))
+				.map(user -> new Ranking(user, records)).collect(Collectors.toList());
+		Collections.sort(rankings);
+		return rankings;
+	}
+
+	/**
+	 * @return the sudokus
+	 */
+	public static Sudokus getSudokus() {
+		return sudokus;
+	}
+
+	/**
+	 * @param sudokus the sudokus to set
+	 */
+	public static void setSudokus(Sudokus sudokus) {
+		Manager.sudokus = sudokus;
+	}
+
+	/**
+	 * @return the users
+	 */
+	public static Users getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public static void setUsers(Users users) {
+		Manager.users = users;
+	}
+
+	/**
+	 * @return the records
+	 */
+	public static Records getRecords() {
+		return records;
+	}
+
+	/**
+	 * @param records the records to set
+	 */
+	public static void setRecords(Records records) {
+		Manager.records = records;
 	}
 
 }
