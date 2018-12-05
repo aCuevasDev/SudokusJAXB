@@ -47,13 +47,9 @@ public class Manager {
 				store(records);
 				store(users);
 			} else {
-				try {
-					reload(sudokus);
-					reload(users);
-					reload(records);
-				} catch (CriticalException e) {
-					throw e;
-				}
+				reload(sudokus);
+				reload(users);
+				reload(records);
 			}
 			int option;
 			do {
@@ -103,7 +99,6 @@ public class Manager {
 					break;
 				case 2:
 					registerRecord(loggedInUser, records);
-					store(records);
 					break;
 				case 3:
 					loggedInUser.changePassword();
@@ -139,7 +134,7 @@ public class Manager {
 	 * 
 	 * @param username String, the username.
 	 * @param users    A Users object with all the registered users.
-	 * @return
+	 * @return true if the username is already in use, else false.
 	 */
 	public static boolean usernameInUse(String username, Users users) {
 		return users.getUsers().stream().anyMatch(user -> user.equals(new User(username)));
@@ -148,7 +143,7 @@ public class Manager {
 	/**
 	 * Creates a new user and saves it into the XML
 	 * 
-	 * @return true if the user is created succesfully, else false.
+	 * @return true if the user is created successfully, else false.
 	 * @throws CriticalException when the program has problems saving/reading data.
 	 */
 	public static boolean createNewUser() throws CriticalException {
@@ -206,7 +201,8 @@ public class Manager {
 	/**
 	 * Logs in the User, asking for a username and password.
 	 * 
-	 * @throws RunnableException
+	 * @return boolean True if the User was created successfully, else false
+	 * @throws RunnableException when not successful
 	 */
 	public static boolean logIn() {
 
@@ -268,8 +264,9 @@ public class Manager {
 	 * @param user    the User saving the data.
 	 * @param sudoku  the Sudoku to save.
 	 * @param records Records where to save the Record
+	 * @throws CriticalException when the program can't save data.
 	 */
-	public static void registerRecord(User user, Records records) {
+	public static void registerRecord(User user, Records records) throws CriticalException {
 		try {
 			UserInteraction.printMessage(UserInteraction.Messages.FINISH_SUDOKU, true);
 			if (InputAsker.yesOrNo("")) {
@@ -278,6 +275,7 @@ public class Manager {
 				if (time > 0) {
 					if (user.getPlayedSudoku() != null) {
 						records.getRecords().add(new Record(user.getUsername(), time, user.getPlayedSudoku()));
+						store(records);
 						user.setPlayedSudoku(null);
 					} else
 						throw new RunnableException(RunErrors.NOT_PLAYING);

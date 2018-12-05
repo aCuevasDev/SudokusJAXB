@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.acuevas.sudokus.controller.Manager;
+import com.acuevas.sudokus.exceptions.CriticalException;
 import com.acuevas.sudokus.model.Ranking;
 import com.acuevas.sudokus.model.records.Records;
 import com.acuevas.sudokus.model.records.Records.Record;
@@ -71,8 +72,6 @@ class Tests {
 	 */
 	@Test
 	void randomSudokuNotUsedByUser() {
-//		Record(String username, int time, int level, String description, String uncompletedSudoku, String completedSudoku)
-//		Sudoku(Integer level, String description, String unCompletedSudoku, String solvedSudoku)
 		final int iterations = 15;
 
 		records.getRecords().add(new Record(user.getUsername(), 60, sudoku1));
@@ -147,7 +146,11 @@ class Tests {
 	@Test
 	void finishSudoku() {
 		user.setPlayedSudoku(sudoku1);
-		Manager.registerRecord(user, records);
+		try {
+			Manager.registerRecord(user, records);
+		} catch (CriticalException e) {
+			e.printStackTrace();
+		}
 		assertTrue(records.getRecords().stream().anyMatch(record -> record.hasUser(user)));
 	}
 
