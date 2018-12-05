@@ -148,15 +148,20 @@ public class Users {
 		 */
 		public void changePassword() {
 			boolean error;
+			String state = "";
+			final String correctState = "correct";
 			do {
 				try {
 					error = false;
-					String psword;
+					String psword = "";
 					String psword2;
 					String psword3;
-					UserInteraction.printMessage(UserInteraction.Messages.ASK_PASSWORD, true);
-					psword = InputAsker.pedirCadena("");
+					if (!state.equals(correctState)) {
+						UserInteraction.printMessage(UserInteraction.Messages.ASK_PASSWORD, true);
+						psword = InputAsker.pedirCadena("");
+					}
 					if (psword.equals(password)) {
+						state = correctState;
 						UserInteraction.printMessage(UserInteraction.Messages.NEW_PASWORD, true);
 						psword2 = InputAsker.pedirCadena("");
 						if (psword.equals(psword2))
