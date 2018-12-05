@@ -1,4 +1,4 @@
-package com.acuevas.sudokus.userInteraction;
+package com.acuevas.sudokus.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;

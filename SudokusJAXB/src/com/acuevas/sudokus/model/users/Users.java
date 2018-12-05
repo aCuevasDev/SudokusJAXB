@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.acuevas.sudokus.controller.InputAsker;
 import com.acuevas.sudokus.exceptions.RunnableException;
-import com.acuevas.sudokus.userInteraction.InputAsker;
 import com.acuevas.sudokus.userInteraction.UserInteraction;
 
 /**

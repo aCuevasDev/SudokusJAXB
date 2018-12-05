@@ -15,7 +15,6 @@ import com.acuevas.sudokus.model.sudokus.Sudokus.Sudoku;
 import com.acuevas.sudokus.model.users.Users;
 import com.acuevas.sudokus.model.users.Users.User;
 import com.acuevas.sudokus.persistance.SudokusDAO;
-import com.acuevas.sudokus.userInteraction.InputAsker;
 import com.acuevas.sudokus.userInteraction.UserInteraction;
 import com.acuevas.sudokus.userInteraction.UserInteraction.Messages;
 
@@ -205,10 +204,11 @@ public class Manager {
 		// TODO RELOAD THE INSTANCE OF 'Class' FROM THE XML (ex. records)
 	}
 
-	public void finishSudoku() {
+	public void finishSudoku(Sudoku sudoku) {
 		// TODO IMPLEMENT THIS WAY OF SENDING MESSAGES TO THE USER EVERYWHERE
 		boolean finished = InputAsker.yesOrNo(UserInteraction.Messages.FINISH_SUDOKU.toString());
 		int time = InputAsker.pedirEntero(UserInteraction.Messages.ASK_TIME.toString());
+		records.getRecords()
 	}
 
 }
